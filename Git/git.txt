@@ -1,0 +1,2 @@
+Git commit --amend -m "message you want to change" //change commit message
+Git cherry pick 
