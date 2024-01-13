@@ -3,6 +3,9 @@ Open file_name // opens file
 Touch file_name // creates file 
 Ipconfig getifaddr en0 // Get local ip address
 Curl ifconfig.me // get public ip address
-Sudo shutdown -h now // shutdown syste 
+Sudo shutdown -h now // shutdown system 
 Sudo shutdown -r now // restart system
 Sudo shutdown -s now // sleep system
+Ls -l // checks for permissions of a directory
+Ls -a // see all hidden files
+open ~/.zshrc // open any file from root
