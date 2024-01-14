@@ -1,4 +1,3 @@
-Chmod 777 file_name // give full access permission
 Open file_name // opens file
 Touch file_name // creates file 
 Ipconfig getifaddr en0 // Get local ip address
@@ -9,3 +8,32 @@ Sudo shutdown -s now // sleep system
 Ls -l // checks for permissions of a directory
 Ls -a // see all hidden files
 open ~/.zshrc // open any file from root
+Chmod 777 file_name // give full access permission
+Chown root // changer ownership of file
+
+
+====== ========== ==========  explanation chmod && chown ===============
+
+Used tp give permission to classes
+
+Read = 4
+Write = 2
+Execute = 1
+
+Add them to five permission e.g. 7 = 4+ 2+ 1 gives read write execute permission
+
+3 classes of owners 
+
+Root first in permissions 7 (root permission ) 7 (group permission) 7(user permission)
+Groups
+User
+
+D = directory
+| = soft link
+- = regular file
+
+======================================================================
+
+Sudo find / -name file_name 2>/dev/null // find file in Mac and ignore permission warnings
+
+
