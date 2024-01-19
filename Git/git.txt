@@ -1,2 +1,4 @@
 Git commit --amend -m "message you want to change" //change commit message
 Git cherry pick 
+Git logs --decorate --graph --oneline
+Git legs --stat

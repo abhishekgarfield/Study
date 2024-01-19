@@ -12,6 +12,7 @@ import {
   Alert,
   LogBox,
   Image,
+  RefreshControl,
 } from 'react-native';
 
 LogBox.ignoreAllLogs();
@@ -169,12 +170,12 @@ const App1 = () => {
                 <Text
                   style={{
                     color: 'white',
-                    fontWeight: '900',
                     fontSize: 30,
+                    fontWeight: '600',
                     textAlign: 'center',
-                    textDecorationLine: 'underline',
+                    margin: 10,
                   }}>
-                  No movies searched yet!
+                  No movies searched yet !
                 </Text>
               )}
             </ScrollView>
@@ -183,17 +184,17 @@ const App1 = () => {
         <Text
           style={{
             color: 'white',
-            fontWeight: '900',
             fontSize: 30,
+            fontWeight: '600',
             textAlign: 'center',
-            textDecorationLine: 'underline',
+            margin: 10,
           }}>
-          Selected movies
+          {selectedMovies.length > 0 ? 'Selected movies' : 'No movies selected'}
         </Text>
         <ScrollView
           style={{display: 'flex', flex: 1, padding: 10, height: 'auto'}}
           contentContainerStyle={{}}>
-          {selectedMovies.map(movie => {
+          {selectedMovies?.map(movie => {
             return (
               <View
                 style={{
@@ -218,6 +219,29 @@ const App1 = () => {
           <Text style={{fontWeight: '600', fontSize: 20}}>{`Bottom View`}</Text>
         </View> */}
       </View>
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 30,
+          fontWeight: '600',
+          textAlign: 'center',
+          margin: 10,
+        }}>
+        Refresh view
+      </Text>
+
+      <RefreshView />
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 30,
+          fontWeight: '600',
+          textAlign: 'center',
+          margin: 10,
+        }}>
+        Pokemons
+      </Text>
+      <LoadMoreView />
     </ScrollView>
   );
 };
@@ -402,3 +426,169 @@ const App = () => {
 };
 
 export default App;
+
+/*
+=============  terminal  =========
+
+chmod 777 file_name // tp give permission to files and directories
+
+Read = 4
+Write = 2
+Execute = 1
+
+d = directory
+- = regular file
+| = soft link
+
+
+add permission alues to give permission to p[aricular class 7 = ( read , write , execute )
+classes = root , groups , user
+
+chown user // to change class of file ( change ownership )
+
+
+*/
+
+const Test2 = () => {
+  return (
+    <SafeAreaView>
+      <Loginscreen />
+    </SafeAreaView>
+  );
+};
+
+/*
+sign up fields
+ email
+ name
+ phone
+ password
+ confirm password
+ login using social
+
+login fields
+  using password
+  using otp
+  using social links
+*/
+
+const Loginscreen = () => {
+  return (
+    <View style={{display: 'flex', backgroundColor: 'lightgrey'}}>
+      <View></View>
+    </View>
+  );
+};
+
+//refresh view using scrollview
+
+const RefreshView = () => {
+  const data = {
+    0: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    1: [11, 12, 13, 14, 15, 16, 17, 18],
+    2: [111, 122, 133, 144, 154, 166, 177, 188],
+  };
+  const [ind, setInd] = useState(0);
+  const [refresh, setRefresh] = useState(false);
+  const onRefresh = () => {
+    console.log('------ in refrsh ---');
+    setRefresh(true);
+    setTimeout(() => {
+      setInd(prevValue => {
+        console.log('-----prev value----', prevValue);
+        return prevValue + 1;
+      });
+      setRefresh(false);
+    }, 3000);
+  };
+  return (
+    <ScrollView
+      style={{backgroundColor: 'lightgrey', height: 'auto', maxHeight: 200,margin:10}}
+      refreshControl={
+        <RefreshControl
+          onRefresh={() => {
+            onRefresh();
+          }}
+          refreshing={refresh}
+        />
+      }>
+      {data[ind]?.map((ele, index) => {
+        return (
+          <View
+            key={index}
+            style={{backgroundColor: 'yellow', padding: 10, margin: 10}}>
+            <Text>{ele}</Text>
+          </View>
+        );
+      })}
+    </ScrollView>
+  );
+};
+
+// Load more using pagination and offsets
+// curl www.google.com can also be used for extracting data from apis insted of postman
+const LoadMoreView = () => {
+  const [offset, setOffset] = useState(1);
+  const [refresh, setRefresh] = useState(false);
+  const [data, setData] = useState([]);
+  const getData = () => {
+    setRefresh(true);
+    fetch(`https://pokeapi.co/api/v2/ability/?offset=${offset}&limit=5`, {
+      method: 'get',
+    })
+      .then(res => res.json())
+      .then(data2 => {
+        console.log('------ data ----', ...data2.results);
+        setOffset(preVal => preVal + 2);
+        setRefresh(false);
+        setData([...data, ...data2.results]);
+        console.log(data);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  return (
+    <ScrollView
+      style={{
+        backgroundColor: 'lightgrey',
+        height: 'auto',
+        maxHeight: 300,
+        margin: 10,
+        marginVertical: 0,
+      }}>
+      {data?.map(({name}, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              backgroundColor: 'skyblue',
+              padding: 10,
+              marginVertical: 3,
+              borderRadius: 3,
+              marginHorizontal: 5,
+            }}>
+            <Text>{name.toUpperCase()}</Text>
+          </View>
+        );
+      })}
+      <TouchableOpacity
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          backgroundColor: 'red',
+          padding: 10,
+          justifyContent: 'flex-start',
+          margin: 10,
+        }}
+        onPress={() => {
+          getData();
+        }}>
+        <Text style={{fontWeight: '700', color: 'white', fontSize: 17}}>
+          Load more
+        </Text>
+        {refresh && <ActivityIndicator color={'white'} />}
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
