@@ -1,0 +1,28 @@
+----- Swift -----
+-- swift programiz ( https://www.programiz.com/swift-programming )
+		   \ swift documentation official ( https://docs.swift.org/swift-book/documentation/the-swift-programming-language/thebasics/ )
+						  \ swift official scavenger project ( https://developer.apple.com/tutorials/app-dev-training#swiftui-essentials )
+										     \ Notes app using swift ( self project and deploy )
+
+----- React Native ----
+-- About react ( https://aboutreact.com/ )
+				          \ React native documentation ( https://reactnative.dev/docs/getting-started )
+															\ [ Blink-it, tiffin-services, packaging-moving-app ] ( self project ) 
+
+----- Javascript -----
+-- W3 school tutorials 
+
+—— Kotlin ——
+— basic tutorials ——
+
+----- React native packages ----
+-- documentation ---
+		                    \ typescript 
+							  \ location react native package ( self project )
+
+------ Mysql ------
+Documentation
+
+
+------ Rails -----
+Documentation
