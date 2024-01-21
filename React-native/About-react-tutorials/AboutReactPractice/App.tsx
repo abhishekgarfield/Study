@@ -13,6 +13,11 @@ import {
   LogBox,
   Image,
   RefreshControl,
+  FlatList,
+  UIManager,
+  Platform,
+  Animated,
+  LayoutAnimation,
 } from 'react-native';
 
 LogBox.ignoreAllLogs();
@@ -242,6 +247,18 @@ const App1 = () => {
         Pokemons
       </Text>
       <LoadMoreView />
+      <Text
+        style={{
+          color: 'white',
+          fontSize: 30,
+          fontWeight: '600',
+          textAlign: 'center',
+          margin: 10,
+        }}>
+        Auto refresh
+      </Text>
+      <AutoRefreshOnEnd />
+      <AnimView />
     </ScrollView>
   );
 };
@@ -503,7 +520,12 @@ const RefreshView = () => {
   };
   return (
     <ScrollView
-      style={{backgroundColor: 'lightgrey', height: 'auto', maxHeight: 200,margin:10}}
+      style={{
+        backgroundColor: 'lightgrey',
+        height: 'auto',
+        maxHeight: 200,
+        margin: 10,
+      }}
       refreshControl={
         <RefreshControl
           onRefresh={() => {
@@ -545,11 +567,20 @@ const LoadMoreView = () => {
         console.log(data);
       });
   };
+
+  const isCloseToTop = ({contentOffset}) => {
+    return contentOffset.y == 0;
+  };
+
   useEffect(() => {
     getData();
   }, []);
   return (
     <ScrollView
+      onScroll={({nativeEvent}) => {
+        console.log(nativeEvent);
+      }}
+      scrollEventThrottle={400}
       style={{
         backgroundColor: 'lightgrey',
         height: 'auto',
@@ -590,5 +621,239 @@ const LoadMoreView = () => {
         {refresh && <ActivityIndicator color={'white'} />}
       </TouchableOpacity>
     </ScrollView>
+  );
+};
+
+// auto refresh with scrollview in end
+
+const AutoRefreshOnEnd = () => {
+  const [data, setData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [offset, setOffset] = useState(1);
+
+  const hasReachedEnd = ({contentOffset, contentSize, layoutMeasurement}) => {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height;
+  };
+
+  const isTop = ({contentOffset}) => {
+    return contentOffset.y == 0;
+  };
+
+  const getData = () => {
+    setRefresh(true);
+    fetch(`https://pokeapi.co/api/v2/ability/?offset=${offset}&limit=5`, {
+      method: 'get',
+    })
+      .then(res => res.json())
+      .then(data2 => {
+        console.log('------ data ----', ...data2.results);
+        setOffset(preVal => preVal + 2);
+        setRefresh(false);
+        setData([...data, ...data2.results]);
+        console.log(data);
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  return (
+    <ScrollView
+      style={{
+        maxHeight: 200,
+        height: 'auto',
+        backgroundColor: 'lightgrey',
+        margin: 10,
+      }}
+      scrollEventThrottle={400} // for finding scroll
+      onScroll={({nativeEvent}) => {
+        console.log('--- native ---', nativeEvent);
+        if (hasReachedEnd(nativeEvent)) {
+          console.log('-------- in end of scroll -----');
+          getData();
+        }
+        if (isTop(nativeEvent)) {
+          console.log('---- in top of scroll ----');
+        }
+      }}>
+      {data?.map(({name}, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              backgroundColor: 'skyblue',
+              padding: 10,
+              marginVertical: 3,
+              borderRadius: 3,
+              marginHorizontal: 5,
+            }}>
+            <Text>{name.toUpperCase()}</Text>
+          </View>
+        );
+      })}
+      {refresh && <ActivityIndicator color={'red'} size={40} />}
+    </ScrollView>
+  );
+};
+
+// auto refresh using flatlist when at end
+
+const AutoRefreshFlatList = () => {
+  const [data, setData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const [offset, setOffset] = useState(1);
+
+  const getData = () => {
+    setRefresh(true);
+    fetch(`https://pokeapi.co/api/v2/ability/?offset=${offset}&limit=5`, {
+      method: 'get',
+    })
+      .then(res => res.json())
+      .then(data2 => {
+        console.log('------ data ----', ...data2.results);
+        setOffset(preVal => preVal + 2);
+        setRefresh(false);
+        setData([...data, ...data2.results]);
+        console.log(data);
+      });
+  };
+
+  const Footer = () => {
+    return <ActivityIndicator color={'green'} size={40} />;
+  };
+
+  const Item = ({item}) => {
+    return (
+      <View
+        style={{
+          backgroundColor: 'skyblue',
+          padding: 10,
+          marginVertical: 3,
+          borderRadius: 3,
+          marginHorizontal: 5,
+        }}>
+        <Text>{item.name.toUpperCase()}</Text>
+      </View>
+    );
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={item => item.id}
+      renderItem={Item}
+      ListHeaderComponent={() => {
+        return <View></View>;
+      }} // to add header component in list
+      ListFooterComponent={Footer} // footer component
+      onEndReachedThreshold={0.5} // add content ehrn reached en
+      onEndReached={console.log('---sd-s-d-s-ds-')}
+      ListEmptyComponent={() => {
+        return <View></View>;
+      }} // for listing emptly message when no elements in list
+    />
+  );
+};
+
+// Animation in scrollview
+
+const AnimView = () => {
+  const imageUrl =
+    'https://raw.githubusercontent.com/AboutReact/sampleresource/master/logosmalltransparen.png';
+
+  if (Platform.OS == 'android') {
+    UIManager.setLayoutAnimationEnabledExperimental &&
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+
+  const setAnimation = () => {
+    LayoutAnimation.configureNext({
+      duration: 500,
+      create: {
+        property: 'scaleXY',
+        type: 'easeIn',
+        springDamping: 0.7,
+      },
+      update: {
+        property: 'scaleXY',
+        type: 'easeIn',
+        springDamping: 0.7,
+      },
+      delete: {
+        property: 'scaleXY',
+        type: 'easeIn',
+      },
+    });
+  };
+  const addItem = () => {
+    let obj = {
+      key: data.length,
+      uri: imageUrl,
+      title: 'Animated FlatList Example Heading' + data.length,
+      description: 'Please visit www.aboutreact.com',
+      animated: true,
+    };
+    setData([...data, obj]);
+    setAnimation();
+  };
+
+  const removeItem = key2 => {
+    setData(data?.filter(({key}) => key != key2));
+    setAnimation();
+  };
+
+  const [data, setData] = useState([]);
+  return (
+    <View style={{display: 'flex', flexDirection: 'column'}}>
+      <TouchableOpacity
+        style={{backgroundColor: 'red', padding: 10, borderRadius: 5}}
+        onPress={addItem}>
+        <Text
+          style={{
+            color: 'white',
+            alignSelf: 'center',
+            fontWeight: '800',
+            padding: 4,
+            fontSize: 15,
+          }}>
+          Add item
+        </Text>
+      </TouchableOpacity>
+      <ScrollView style={{height: 200, backgroundColor: 'brown'}}>
+        {data?.map((item, index) => {
+          return (
+            <Animated.View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                paddingHorizontal: 10,
+              }}
+              onStartShouldSetResponder={() => {
+                removeItem(item?.key);
+                return true;
+              }}>
+              <View style={{display: 'flex', padding: 10}}>
+                <Image
+                  src={item?.uri}
+                  style={{height: 70, width: 70}}
+                  resizeMethod="resize"
+                  resizeMode="cover"
+                />
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  flexDirection: 'column',
+                }}>
+                <Text style={{color: 'white'}}>{item.title}</Text>
+                <Text style={{color: 'white'}}>{item.description}</Text>
+              </View>
+            </Animated.View>
+          );
+        })}
+      </ScrollView>
+    </View>
   );
 };
