@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
   View,
@@ -22,14 +23,14 @@ import {
 
 LogBox.ignoreAllLogs();
 
-const App1 = () => {
+const App1 = ({navigation}) => {
   const [valX, setValX] = useState(0);
   const [valY, setValY] = useState(100);
   const [numberToCheck, setNumberToCheck] = useState(0);
   const [allMovies, setAllMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
-
+  // const navigation =useNavigation() // can also be imported from props alwasys passes on to while routing
   useEffect(() => {
     const test = setInterval(() => {
       setValX(val => {
@@ -259,6 +260,46 @@ const App1 = () => {
       </Text>
       <AutoRefreshOnEnd />
       <AnimView />
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'skyblue',
+          padding: 10,
+          borderRadius: 5,
+          margin: 3,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={() => {
+          console.log('------ on press -----');
+          navigation.navigate('secondscreen',{
+            username:'abhishek'
+          });
+        }}>
+        <Text
+          style={{color: 'white', fontSize: 20, fontWeight: '800', padding: 5}}>
+          Navigate to second
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'skyblue',
+          padding: 10,
+          borderRadius: 5,
+          margin: 3,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={() => {
+          console.log('------ on press -----');
+          navigation.navigate('thirdscreen',{
+            username:'abhishek'
+          });
+        }}>
+        <Text
+          style={{color: 'white', fontSize: 20, fontWeight: '800', padding: 5}}>
+          Navigate to third
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -347,7 +388,9 @@ const Test = () => {
   );
 };
 
-const FirstScreen = () => {
+const FirstScreen = ({navigation, route}) => {
+  const {userId} = route.params;
+  console.log("--------- user id -------",userId)
   const [inputValue, setInputValue] = useState('');
   return (
     <SafeAreaView style={{display: 'flex', flex: 1, backgroundColor: 'black'}}>
@@ -437,7 +480,7 @@ const FirstScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      <App1 />
+      <App1 navigation={navigation} />
     </SafeAreaView>
   );
 };
@@ -805,7 +848,7 @@ const AnimView = () => {
 
   const [data, setData] = useState([]);
   return (
-    <View style={{display: 'flex', flexDirection: 'column', margin:10}}>
+    <View style={{display: 'flex', flexDirection: 'column', margin: 10}}>
       <TouchableOpacity
         style={{backgroundColor: 'red', padding: 10, borderRadius: 5}}
         onPress={addItem}>
@@ -820,7 +863,7 @@ const AnimView = () => {
           Add item
         </Text>
       </TouchableOpacity>
-      <ScrollView style={{height: 200, margin:10}}>
+      <ScrollView style={{maxHeight: 200, height: 'auto', margin: 10}}>
         {data?.map((item, index) => {
           return (
             <Animated.View

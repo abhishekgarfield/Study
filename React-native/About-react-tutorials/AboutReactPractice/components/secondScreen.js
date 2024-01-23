@@ -1,45 +1,52 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {create} from 'domain';
-import {createRef, useEffect, useState} from 'react';
-import {ScrollView, TextInput, View, Text, SafeAreaView, ActivityIndicator, LogBox} from 'react-native';
+import {createRef, useEffect, useMemo, useState} from 'react';
+import {
+  ScrollView,
+  TextInput,
+  View,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import WebView from 'react-native-webview';
+import FirstScreen from './firstScreen';
 
+/* If we are already on same screen then [navigation.navigate] doesnot work
+if we want to mave to same screen we are currently on we can use [navigation.push] */
 
+// Auto scroll to particular element in scrollview and react native web view
 const SecondScreen = ({navigation}) => {
-    const [dataSource, setDatasSource] = useState([]);
-    const [dataCoords, setDataCoords] = useState({});
-    const [refresh,setRefresh] = useState(false)
+  const [dataSource, setDatasSource] = useState([]);
+  let dataCoords = [];
+  //   const [dataCoords, setDataCoords] = useState({});
+  const [refresh, setRefresh] = useState(false);
+  const scrollRef = createRef();
+  const getData = () => {
+    fetch('https://jsonplaceholder.typicode.com/posts')
+      .then(res => res.json())
+      .then(data => {
+        setDatasSource(data);
+      });
+  };
 
-    navigation.
-
-    // const navigation = useNavigation()
-    // navigation.setOptions({
-
-    // })
-
-    const scrollRef = createRef();
-    const getData = () => {
-      fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(res => res.json())
-        .then(data => {
-          setDatasSource(data);
-        });
-    };
-
-    const scrolltoindex = index => {
-      console.log("---- index---",index )
-      Number(index)
-        ? scrollRef.current?.scrollTo({
-            y: dataCoords[index],
-            animated: true,
-          })
-        : null;
-    };
-    useEffect(() => {
-      getData();
-    }, []);
-    return (
-      <SafeAreaView>
+  const scrolltoindex = index => {
+    console.log('---- index---', index, dataCoords);
+    Number(index)
+      ? scrollRef.current?.scrollTo({
+          // use scrolltooffset for flatlist
+          y: dataCoords[index],
+          animated: true,
+        })
+      : null;
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  return (
+    <SafeAreaView>
+      <ScrollView>
         <View style={{display: 'flex', flexDirection: 'column', margin: 10}}>
           <TextInput
             style={{
@@ -71,8 +78,9 @@ const SecondScreen = ({navigation}) => {
                     flexDirection: 'column',
                   }}
                   onLayout={({nativeEvent: {layout}}) => {
-                    console.log("------",dataCoords)
-                    setDataCoords({...dataCoords, [index]: layout.y});
+                    console.log('------', layout);
+                    //   setDataCoords({...dataCoords, [index]: layout.y});
+                    dataCoords = {...dataCoords, [index]: layout.y};
                   }}>
                   <View
                     style={{
@@ -116,17 +124,102 @@ const SecondScreen = ({navigation}) => {
             })}
           </ScrollView>
         </View>
-        <View style={{height:300}}>
-        {refresh ? <ActivityIndicator color={'red'} size={30} animating={refresh}/> :
-        <WebView
-          source={{uri:'https://aboutreact.com/'}}
-          onLoad={()=>{setRefresh(false)}}
-          onLoadStart={()=>{console.log("--dsf-s-df-sd-fs-df-sdf-");setRefresh(false)}}
-          onLoadProgress={()=>{console.log("-as-d-as-d-ad-a-sd-as-d-asd-a-sd-a-sd");setRefresh(false)}}/> }
+        <View style={{height: 300, marginBottom: 20}}>
+          {refresh ? (
+            <ActivityIndicator color={'red'} size={30} animating={refresh} />
+          ) : (
+            <WebView
+              source={{uri: 'https://aboutreact.com/'}}
+              onLoad={() => {
+                setRefresh(false);
+              }}
+              onLoadStart={() => {
+                setRefresh(false);
+              }}
+              onLoadProgress={() => {
+                setRefresh(false);
+              }}
+            />
+          )}
         </View>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'skyblue',
+            padding: 10,
+            borderRadius: 5,
+            margin: 3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            console.log('------ on press -----');
+            navigation.navigate('firstscreen',{
+                userId:3
+            });
+            // navigation.goBack(); // for goin back to previous stack
+            // navigation.popToTop() // it goes back to first screen in stack and dismiss all others
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              fontWeight: '800',
+              padding: 5,
+            }}>
+            Navigate to first screen
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'skyblue',
+            padding: 10,
+            borderRadius: 5,
+            margin: 3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            console.log('------ on press -----');
+            //   navigation.navigate('firstscreen');
+            navigation.push('secondscreen'); // for goin back to previous stack
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              fontWeight: '800',
+              padding: 5,
+            }}>
+            Go again to second screen push
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'skyblue',
+            padding: 10,
+            borderRadius: 5,
+            margin: 3,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          onPress={() => {
+            console.log('------ on press -----');
+            //navigation.navigate('firstscreen');
+            navigation.navigate('secondscreen'); // for goin back to previous stack
+          }}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: 20,
+              fontWeight: '800',
+              padding: 5,
+            }}>
+            Go again to second using navigate
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
-      </SafeAreaView>
-    );
-  };
-
-  export default SecondScreen;
+export default SecondScreen;
