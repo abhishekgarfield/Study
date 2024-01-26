@@ -30,7 +30,7 @@ const Drawer = createDrawerNavigator();
 
 const FirstStackNav = () => {
   return (
-    <FirstStack.Navigator>
+    <FirstStack.Navigator screenOptions={{headerShown:false}}>
       <FirstStack.Screen
         component={FirstScreen}
         name="firstscreen"
@@ -50,12 +50,18 @@ const SecondStackNav = () => {
 };
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationCont  ainer>
       <SafeAreaProvider>
         <Drawer.Navigator
           initialRouteName="firststack"
           screenOptions={{
-            headerShown: false,
+            headerShown: true,
+            headerTransparent:true,
+            headerTitle:'',
+            drawerStyle:{
+              backgroundColor:'red'
+            }
+
           }}>
           <Drawer.Screen component={FirstStackNav} name="firststack" />
           <Drawer.Screen component={SecondStackNav} name="secondstack" />
