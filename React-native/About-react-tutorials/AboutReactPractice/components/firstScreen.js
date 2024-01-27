@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {
   View,
@@ -392,6 +392,17 @@ const FirstScreen = ({navigation, route}) => {
   const {userId} = route.params;
   console.log("--------- user id -------",userId)
   const [inputValue, setInputValue] = useState('');
+
+  useEffect(()=>{
+    const unsuscribe = navigation.addListener('focus',()=>{
+      console.log("----- in focus and run me ------");
+    })
+
+    // to clear effect
+    return ()=>{
+      unsuscribe;
+    }
+  }, [navigation])
   return (
     <SafeAreaView style={{display: 'flex', flex: 1, backgroundColor: 'black'}}>
       <View
@@ -406,11 +417,18 @@ const FirstScreen = ({navigation, route}) => {
           backgroundColor: 'white',
           padding: 10,
         }}>
+          <TouchableOpacity onPress={()=>{
+            console.log("---- hello ---");
+            navigation.openDrawer();
+          }}>
+
         <Image
           style={{height: 25, width: 25}}
           resizeMode="stretch"
           src="https://raw.githubusercontent.com/AboutReact/sampleresource/master/input_username.png"
         />
+
+           </TouchableOpacity>
         <TextInput
           editable={true}
           placeholder="Enter your name here"

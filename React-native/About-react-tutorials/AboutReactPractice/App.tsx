@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import {NavigationContainer} from '@react-navigation/native';
+import {DrawerActions, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {LogBox} from 'react-native';
 import FirstScreen from './components/firstScreen';
@@ -50,16 +50,16 @@ const SecondStackNav = () => {
 };
 const App = () => {
   return (
-    <NavigationCont  ainer>
+    <NavigationContainer>
       <SafeAreaProvider>
         <Drawer.Navigator
           initialRouteName="firststack"
           screenOptions={{
-            headerShown: true,
+            headerShown: false,
             headerTransparent:true,
             headerTitle:'',
             drawerStyle:{
-              backgroundColor:'red'
+              // backgroundColor:'red'
             }
 
           }}>
