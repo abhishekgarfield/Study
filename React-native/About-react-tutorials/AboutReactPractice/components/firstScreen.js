@@ -271,8 +271,8 @@ const App1 = ({navigation}) => {
         }}
         onPress={() => {
           console.log('------ on press -----');
-          navigation.navigate('secondscreen',{
-            username:'abhishek'
+          navigation.navigate('secondscreen', {
+            username: 'abhishek',
           });
         }}>
         <Text
@@ -283,7 +283,7 @@ const App1 = ({navigation}) => {
       <TouchableOpacity
         style={{
           backgroundColor: 'skyblue',
-          padding: 10,
+          padding: 8,
           borderRadius: 5,
           margin: 3,
           justifyContent: 'center',
@@ -291,13 +291,40 @@ const App1 = ({navigation}) => {
         }}
         onPress={() => {
           console.log('------ on press -----');
-          navigation.navigate('thirdscreen',{
-            username:'abhishek'
+          navigation.navigate('thirdscreen', {
+            username: 'abhishek',
           });
         }}>
         <Text
           style={{color: 'white', fontSize: 20, fontWeight: '800', padding: 5}}>
           Navigate to third
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'skyblue',
+          padding: 8,
+          borderRadius: 5,
+          margin: 3,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        onPress={() => {
+          console.log('------ hello ---');
+          navigation.setOptions({
+            title: 'Orange Header',
+            headerStyle: {
+              backgroundColor: 'orange', //Set Header color
+            },
+            headerTintColor: 'black', //Set Header text color
+            headerTitleStyle: {
+              fontWeight: 'bold', //Set Header text style
+            },
+          });
+        }}>
+        <Text
+          style={{color: 'white', fontSize: 20, fontWeight: '800', padding: 5}}>
+          change color drawer
         </Text>
       </TouchableOpacity>
     </ScrollView>
@@ -390,55 +417,21 @@ const Test = () => {
 
 const FirstScreen = ({navigation, route}) => {
   const {userId} = route.params;
-  console.log("--------- user id -------",userId)
+  console.log('--------- user id -------', userId);
   const [inputValue, setInputValue] = useState('');
 
-  useEffect(()=>{
-    const unsuscribe = navigation.addListener('focus',()=>{
-      console.log("----- in focus and run me ------");
-    })
+  useEffect(() => {
+    const unsuscribe = navigation.addListener('focus', () => {
+      console.log('----- in focus and run me ------');
+    });
 
     // to clear effect
-    return ()=>{
+    return () => {
       unsuscribe;
-    }
-  }, [navigation])
+    };
+  }, [navigation]);
   return (
     <SafeAreaView style={{display: 'flex', flex: 1, backgroundColor: 'black'}}>
-      <View
-        style={{
-          margin: 5,
-          marginHorizontal: 10,
-          borderColor: 'black',
-          borderRadius: 5,
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'row',
-          backgroundColor: 'white',
-          padding: 10,
-        }}>
-          <TouchableOpacity onPress={()=>{
-            console.log("---- hello ---");
-            navigation.openDrawer();
-          }}>
-
-        <Image
-          style={{height: 25, width: 25}}
-          resizeMode="stretch"
-          src="https://raw.githubusercontent.com/AboutReact/sampleresource/master/input_username.png"
-        />
-
-           </TouchableOpacity>
-        <TextInput
-          editable={true}
-          placeholder="Enter your name here"
-          style={{padding: 10, backgroundColor: 'white', flexGrow: 1}}
-          placeholderTextColor={'grey'}
-          onChangeText={text => {
-            setInputValue(text);
-          }}
-        />
-      </View>
       <View style={{margin: 10}}>
         <TouchableOpacity
           style={{

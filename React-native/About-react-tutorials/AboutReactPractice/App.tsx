@@ -7,6 +7,7 @@ import SecondScreen from './components/secondScreen';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import ThirdScreen from './components/thirdScreen';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import Header from './components/header';
 
 LogBox.ignoreAllLogs();
 
@@ -55,13 +56,21 @@ const App = () => {
         <Drawer.Navigator
           initialRouteName="firststack"
           screenOptions={{
-            headerShown: false,
-            headerTransparent:true,
+            headerShown: true,
+            headerTransparent:false,
             headerTitle:'',
             drawerStyle:{
-              // backgroundColor:'red'
-            }
+              backgroundColor:'black'
+            },
+            // headerLeft: () => <Header/>,
+            header:() => <Header/>,
 
+            drawerItemStyle:{
+              backgroundColor:'white'
+            },
+            drawerContentContainerStyle:{
+              backgroundColor:'black'
+            },
           }}>
           <Drawer.Screen component={FirstStackNav} name="firststack" />
           <Drawer.Screen component={SecondStackNav} name="secondstack" />
