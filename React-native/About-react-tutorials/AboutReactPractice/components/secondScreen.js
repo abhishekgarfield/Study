@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import WebView from 'react-native-webview';
 import FirstScreen from './firstScreen';
@@ -43,6 +44,17 @@ const SecondScreen = ({navigation}) => {
   };
   useEffect(() => {
     getData();
+
+    const subscribe = BackHandler.addEventListener('hardwareBackPress',()=>{
+      console.log("------ here ------");
+    })
+
+    return ()=>{
+      subscribe.remove();
+      BackHandler.removeEventListener('hardwareBackPress',()=>{
+        console.log("-------------- hello --------");
+      })
+    }
   }, []);
   return (
     <SafeAreaView>
