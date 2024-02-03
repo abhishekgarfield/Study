@@ -95,6 +95,7 @@ const FirsttabStack = () =>{
   )
 }
 const App = () => {
+  global.variable = 10 ; // accessible in whole app
   return (
     <NavigationContainer>
       <SafeAreaProvider>

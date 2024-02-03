@@ -4,7 +4,7 @@ const ThirdScreen = () => {
   return (
     <SafeAreaView>
       <View>
-        <Text>Third screen</Text>
+        <Text>Third screen global variable = {global.variable}</Text>
       </View>
     </SafeAreaView>
   );
