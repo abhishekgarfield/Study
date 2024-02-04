@@ -718,7 +718,7 @@ const AutoRefreshOnEnd = () => {
         backgroundColor: 'lightgrey',
         margin: 10,
       }}
-      scrollEventThrottle={400} // for finding scroll
+      scrollEventThrottle={400} // for FIRING scroll EVENT
       onScroll={({nativeEvent}) => {
         console.log('--- native ---', nativeEvent);
         if (hasReachedEnd(nativeEvent)) {

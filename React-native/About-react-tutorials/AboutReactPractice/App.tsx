@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import {DrawerActions, NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Image, LogBox, View} from 'react-native';
+import {Image, LogBox, PermissionsAndroid, View} from 'react-native';
 import FirstScreen from './components/firstScreen';
 import SecondScreen from './components/secondScreen';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -96,6 +96,20 @@ const FirsttabStack = () =>{
 }
 const App = () => {
   global.variable = 10 ; // accessible in whole app
+
+  /* check on android --------  */
+  console.log("---------- permission android -------",PermissionsAndroid.PERMISSIONS);
+  console.log("----- permision aaccepted --------",PermissionsAndroid.RESULTS);
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA,{
+    message:'CHECK MESSAGE',
+    title:'SFDSFSDFSF',
+    buttonPositive:'asdasdasdasd',
+    buttonNegative:'sadasdasdasdasd'
+  })
+
+
+
+
   return (
     <NavigationContainer>
       <SafeAreaProvider>
