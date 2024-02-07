@@ -1,16 +1,12 @@
-import {Image, SafeAreaView, TouchableOpacity, Text, View} from 'react-native';
+import { Provider } from 'react-redux';
+import { Store } from './src/store/store';
+import Counter from './src/components/counter';
 
 const App = () => {
   return (
-    <SafeAreaView style={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-      <View>
-        <Image source={{uri: ''}} />
-      </View>
-      <View>
-        <TouchableOpacity>
-          <Text>Incrememnt by 2</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <Provider store={Store}>
+      <Counter/>
+    </Provider>
   );
 };
+export default App;
