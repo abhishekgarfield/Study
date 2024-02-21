@@ -1,8 +1,8 @@
-import {Image, SafeAreaView, TouchableOpacity, Text, View} from 'react-native';
+import {Image, SafeAreaView, TouchableOpacity, Text, View, LogBox} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { incAsync, incrememnt } from './basicSlice';
 const img = require('../components/img.jpeg')
-
+LogBox.ignoreAllLogs()
 export default () => {
 const count = useSelector(state => state.count.value)
 console.log("----render ----")
