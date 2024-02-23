@@ -613,3 +613,293 @@ func goCheck(clsr: @autoclosure ()->()) -> Void {
 goCheck(clsr: print("----- helo mike 12345 ---"))
 
 
+// ****** ***** **** CLASSES AND OBJECTS
+
+//class is a blueprint
+
+class Cls{
+    var name="test";
+    var model=234
+}
+// object is called an instance of a class
+var obj = Cls();
+print("-----\(obj.name)--\(obj.model)---")
+
+var obj2 = Cls()
+
+obj2.name = "test234";
+print("--obj2 changes ----\(obj2.name)---")
+var arr:[Int] = [1,2,3,4];
+
+print("-----\(arr[0...2])-")
+var test1000:Int = 34
+
+// class to check area of room and store dimensions
+
+class Room{
+    // properties of class
+    var height:Int = 0;
+    var width:Int = 0;
+
+    // calculate area method of class
+
+    func calArea()->Void{
+        print("---arae of study room -----\(height*width)-----")
+        height = height + 30;
+        print("----- height change ********* ------\(height)-----\(self.height)")
+        }
+
+}
+
+var studyRoom = Room();
+studyRoom.height = 10;
+studyRoom.width = 10;
+studyRoom.calArea()
+
+// initializers for initializing properties with object
+
+class Bike{
+    var name="";
+    var gear:Int = 0
+
+    init(_ name:String,_ gear:Int){
+        self.name = name;
+        self.gear = gear
+    }
+
+    func printBikeDetails(){
+        print("----- bike name is \(name) ----- gears are \(gear)");
+    }
+}
+
+
+var bike1 = Bike("Ktm" ,6);
+bike1.printBikeDetails()
+
+// struct vs class
+
+/* classes are refrence types and concept of oops */
+
+class Car{
+    var color:String = ""
+
+    init(_ color: String){
+        self.color = color;
+    }
+}
+
+var car1 = Car("red");
+var car2 = car1 ;
+car2.color = "blue";
+
+print("----- car1 ----\(car1.color) ---- car 2 ----\(car2.color)") // here we can see on changing color of car 1 the color of car 2 is also changes because they share same copy of data
+
+
+
+struct Carstruct{
+    var color:String = "";
+    init(_ color: String){
+        self.color = color
+    };
+}
+
+var car3 = Carstruct("red");
+var car4 = car3
+car4.color = "blue"
+print("----- car1 ----\(car3.color) ---- car 2 ----\(car4.color)") // these are of value type they hold individual copy of data
+
+// ********** ****** ***** SWIFT PROPERTIES
+
+// A SWIFT VARIABLE OR CONSTAT DEFINED INSDE CLASS IS CALLED PROPERTY // ALSO called stored properties
+
+// computed properties
+
+class Sum{
+    // defined 2 stored properties
+    var num1:Int = 0;
+    var num2:Int = 0;
+
+
+    init(_ num1:Int, _ num2:Int){
+        self.num1 = num1;
+        self.num2 = num2;
+    }
+
+
+    // defined one coputed property
+    var sum: Int {
+        num1 + num2
+    }
+
+    var mult: Int {
+        get {
+            num1*num2
+        }
+
+        set(modify){
+            num1 = (modify + 10);
+            num2 = (modify + 20);
+        }
+    }
+
+}
+
+var obj45 = Sum(2,4);
+
+print("------computed property sum ---- \(obj45.sum)");
+print("--------mult ---- getter  ----\(obj45.mult)---------")
+obj45.mult = 5;
+print("-------------num1 and num2 mofdifed in setter of compute property --num1--\(obj45.num1)--- num2 ----\(obj45.num2)")
+// including getter and setter in coputed properties
+// getter is used to retrieve value from computed propety
+// setter is used to change value of properties or to modify it
+
+
+class University{
+    static var  name:String = "";
+    var founded:Int = 0;
+
+    init(_ founded: Int){
+        self.founded = founded
+    }
+
+
+}
+
+var uni1 = University(1234);
+University.name = "jaypee university";
+var uni2 = University(3456);
+University.name = "shitkara";
+
+print("------uni1----\(University.name)")
+
+
+// ****************** SWIFT METHODS ***************
+
+// functions defined inside a class are called methods
+
+
+class Calculator{
+    func add(_ num1:Int, _ num2:Int)->Int{
+        return num1+num2
+    }
+
+    static func multiply(_ num1:Int, _ num2:Int)->Int{
+        return num1*num2
+    }
+}
+
+
+var calc1 = Calculator();
+
+print("---- multiplu using static method ----\(Calculator.multiply(2,5))----- add using non static method ----\(calc1.add(5,6))")
+
+// mutating methods
+// self is used to specify that this variabvle belobgs to object not method parameter
+// we cannot change properties defined inside a struct using methods
+
+struct Employee{
+    var salary:Int = 0;
+
+    init(_ salary:Int){
+        self.salary = salary
+    }
+
+    mutating func increasSalary(inc:Int){
+        salary += inc
+    }
+
+    func printSalary(){
+        print("---- cureent salary is \(salary)")
+    }
+}
+
+var emp1 = Employee(1000);
+emp1.increasSalary(inc:4000);
+emp1.printSalary();
+
+// *************** SWIFT INITIALIZERS ******************
+
+// INITIALIZER OVERLOADING
+
+class Person{
+    var age:Int = 0;
+
+    init(){
+        age = 20
+    };
+
+    init(_ age:Int){
+        self.age = age
+    }
+
+    func getAge(){
+        print("-----age --------\(age)")
+    }
+}
+
+
+var person23 = Person();
+person23.getAge();
+var person56 = Person(56);
+person56.getAge();
+
+
+
+// primary initializers are called designated initializers
+
+// convinience initializers are used to assign default values to stored properties
+
+class University1{
+    var name:String = "";
+    var rank:String = ""
+
+    init(name:String , rank:String){
+        self.name = name;
+        self.rank = rank
+    }
+
+    // define convinience init
+
+    convenience init(){
+        self.init(name: "juju", rank: "1st")
+    }
+}
+
+var uniObj = University1();
+
+print("----- uniobj1 -----\(uniObj.name)")
+
+// DEINITIALIZATION **********************
+// it is used when we want to deallocate memory given to class instances
+
+class Race{
+    var laps:Int;
+
+    init(){
+        laps = 5;
+        print("Race completed");
+        print("---- laps = \(laps)")
+    }
+
+    deinit {
+        print("-- memory deallocated--");
+    }
+}
+
+
+
+var r1:Race? = Race();
+
+r1 = nil;
+
+
+// deinitaializers can only be used with classes not structs --- deinitializers can only be used once per class --- swift automaticaaly does the deallocation
+
+
+// ****************** INHERITANCE ******************
+
+/* IS USED TO CREATE SUBCLASS CHILD CLASS OR derived class and parent class is also called superclass */
+
+// subclass inherits all properties and methods of super class or parent class
+
