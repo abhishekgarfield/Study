@@ -12,6 +12,11 @@ var num5:Int? = 12; // optionals
 // Strings are always represented with ""
 /* Multiline comment */
 
+
+var str45 = "asdasdasd";
+print("=--------",str45.distance(from: str.startIndex, to:str45.firstIndex(of: "s")! ))
+print("------ sytr ---",str45.firstIndex(of: "s")?.encodedOffset) //deprecated
+
 var multString1:String = """
 hi this is
 a multiline string
@@ -902,4 +907,219 @@ r1 = nil;
 /* IS USED TO CREATE SUBCLASS CHILD CLASS OR derived class and parent class is also called superclass */
 
 // subclass inherits all properties and methods of super class or parent class
+
+
+// ******************* enums in swift ****************
+
+enum Season{
+    case summer, winter, automn, rainy;
+}
+var enum1:Season = Season.rainy;
+print("------ enum1 -------\(enum1)")
+
+enum PizzaSize{
+    case small, medium, large;
+}
+var enum2:PizzaSize = PizzaSize.medium;
+
+switch(enum2){
+    case .small:
+        print("---- \(enum2) size pizza ---");
+    case .medium:
+        print("---- \(enum2) size pizza ---");
+    case .large:
+        print("---- \(enum2) size pizza ---");
+}
+
+// iterating with enums
+
+enum Season2: CaseIterable{
+    case summer, winter, autoumn, rainy
+}
+
+for currentSeason in Season2.allCases{
+    print("====== currentseason \(currentSeason) =========")
+}
+
+// enums with raw value
+
+enum Size:Int{
+    case small=10
+    case medium=15
+    case large=20
+}
+var raw = Size.small.rawValue;
+var val = Size.small
+print("----Raw----- ",raw,"------val----",val)
+
+
+// swift enums associated values
+
+enum Distance{
+    case km(String)
+    case miles(String,Double)
+}
+
+var d1Enum:Distance = Distance.km("one thousand");
+var d2Enum:Distance = Distance.miles("in mile", 32.23);
+print("-------d2enum------",d2Enum);
+
+// switch cases with associated values
+
+enum Carsenum{
+    case suv(height: Double)
+    case sedan(height: Double)
+    case hatchBack(height: Double)
+}
+
+var Carrvar = Carsenum.suv(height: 2.34)
+
+switch(Carrvar){
+    case let .hatchBack(height): // let binds the value of height variable which can be used inside case
+     print("----- i m hatchback----",height);
+    case let .sedan(height):
+     print("----- i m sedan ----",height);
+    case let .suv(height):
+     print("----- i m suv ----",height)
+}
+
+// associated values are like variables and rawvalues are like literals
+// enum cannot have raw values and associated values at the same time ,
+// raw values should be of same data type and associated values could be of any data type
+
+
+// ***************** Swift Singleton **********************
+//A class can have only one object is called singlton class // basically it is  a design pattern
+
+class Fileaccess{
+    static let fileObj = Fileaccess();
+
+    init(){
+
+    }
+
+    func checkFileAccess(user: String) -> Bool {
+       return user == "Testuser" ? true : false
+    }
+}
+
+let fileObj = Fileaccess.fileObj;
+fileObj.checkFileAccess(user: "Testuser") ? print("-----access granted -----") : print("------access denied ------")
+
+
+
+// ************** SWIFT ERROR HANDLING *****************
+
+/*
+Steps for error handling in swift
+1) Create and enum that represents the types of errors
+2) Create a throwing function using throws keyword
+3) Call teh fxn using try keyword
+4) Wrap teh coe with try in the do {..} block and add cath block to handle all errors
+*/
+
+enum DivisionError:Error{
+    case DividedByZero
+}
+
+func DivisionHandling(_ num1:Int, deno den:Int) throws {
+    if(den == 0){
+       throw DivisionError.DividedByZero
+    }else{
+        print("-----no errors -----")
+    }
+}
+do{
+    try DivisionHandling(20, deno: 0)
+
+}catch DivisionError.DividedByZero{
+    print("------error caught-----")
+}
+
+// ********** SWIFT GENERICS *************
+
+// FUNCTIONS OR CLASSES that can be used with any type of data are called genric functions or genric classes
+
+func DisplayData<T>(data: T){    // Genric function
+    print("--------data ------",data)
+}
+
+DisplayData(data: 3);
+DisplayData(data: 3.78);
+DisplayData(data: "abhishek");
+
+class Information<T>{          // genric class
+    var data:T;
+
+    init(_ data:T){
+        self.data = data;
+    }
+
+    func getData()-> T{
+        return data;
+    }
+}
+
+var infoObj1 = Information(4);
+var infoObj2 = Information(4.5);
+var infoObj3 = Information("testobj");
+print("---------------",infoObj1.getData())
+print("---------------",infoObj2.getData())
+print("---------------",infoObj3.getData())
+
+
+// *************** Extensions **************************
+
+class Temprature33{
+    var cel:Double;
+    init(_ cel:Double){
+        self.cel = cel;
+    }
+    func displayCelTemp(){
+        print("------sel temp -----",cel)
+    }
+}
+
+extension Temprature33{
+   // var far:Double = 0.98 stored properties are not allowed in extensions
+    func convert(){
+        print("----------farhnheit ----",(cel*1.8)+32);
+    }
+}
+
+var tempObj12 = Temprature33(16);
+tempObj12.displayCelTemp();
+tempObj12.convert()
+
+// *************** swift access control *******************
+
+// private access control are accessible from with class or struct
+// public access control -- can be accessed from anywhere in the code
+// fileprivate access control -- can be accessed from within file // if we create another file then we cannot access them
+// internal access control -- can be accessed from within same modul  (A module is a collection of types build to work togeather and form a logical unit)
+
+class ClassInfo1{
+    public var cls:Int = 0
+
+    public func Display(){
+        print("------- public method ------")
+    }
+}
+
+var classInfoobj1 = ClassInfo1();
+classInfoobj1.Display();
+class cLASSiNFO2{
+    private var cls:Int = 10
+
+     func Display(){
+        print("------- public method ------",cls)
+    }
+}
+
+var classInfoobj2 = cLASSiNFO2();
+classInfoobj2.Display() // error: 'Display' is inaccessible due to 'private' protection level if we add private
+
+
+
+
 
