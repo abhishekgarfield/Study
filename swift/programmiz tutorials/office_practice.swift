@@ -1121,5 +1121,62 @@ classInfoobj2.Display() // error: 'Display' is inaccessible due to 'private' pro
 
 
 
+// ****************** TYPE ALIAS **********************
+// used to provide new names to existing data types
+
+typealias Student = String;
+var st1:Student = "Test user";
+print("---- type alias ----",st1)
+
+// ************ Hashabales *****************
+// hashables is a protocol and are used to assign a hashvalue to object and tehn they can be compared
+
+struct Struct12:Hashable{
+    var name:String;
+    var salary:Int;
+};
+
+var strobj12 = Struct12(name: "test 123", salary: 13000);
+var strobj13 = Struct12(name: "test 123", salary: 13000);
+var strobj14 = Struct12(name: "test 1234", salary: 13000);
+
+print("--------obj1 hashvalue ------",strobj12.hashValue);
+print("--------obj2 hashvalue ------",strobj13.hashValue);
+print("--------obj3 hashvalue ------",strobj14.hashValue);
+
+// **************** Equatable *****************
+// protocol that is used to compare 2 objects using == operator
+
+struct Employee34:Equatable{
+    var sal:Int;
+    var name:String;
+}
+
+var strobj134 = Employee34(sal: 23224, name: "abhishek")
+var strobj135 = Employee34(sal: 23224, name: "abhishek")
+var strobj136 = Employee34(sal: 23233224, name: "aishek")
+
+if(strobj134 == strobj135){
+    print("----- obj1 and 2 are equals ----");
+}
+
+if(strobj134 != strobj136){
+    print("=========obj1 is not equal to 3")
+}
+
+// ************ strong and weak refrences ****************
+//Arc (Automatic refrence counting) is used to allocate nd deallocate memory automatically in swift
+
+
+
+// **************  Starting swiftui ******************
+
+
+
+//Swiftui docs --- https://developer.apple.com/documentation/swiftui/
+// Current swift apple official docs -----  https://docs.swift.org/swift-book/documentation/the-swift-programming-language
+// Scrumdinger app in swift ui ----  https://developer.apple.com/tutorials/app-dev-training/getting-started-with-scrumdinger
+
+
 
 
