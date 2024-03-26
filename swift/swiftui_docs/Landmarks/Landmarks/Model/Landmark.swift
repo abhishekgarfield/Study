@@ -9,7 +9,7 @@ import Foundation;
 import SwiftUI;
 import CoreLocation;
 
-struct Landmark: Decodable,Identifiable {
+struct Landmark: Decodable,Identifiable,Equatable {
     var name:String
     var category:String
     var city:String
