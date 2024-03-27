@@ -1,0 +1,143 @@
+[
+    {
+      "project": "Ezy Grocery",
+      "purpose": "To eliminate paper coupon system"
+    },
+
+    {
+      "shops": [
+        {
+          "id": 1,
+          "name": "garfield pvt ltd",
+          "web_url": "www.google.com",
+          "is_verified": true,
+          "description": "hello this is description of shop"
+        }
+      ],
+
+      "roles": [
+        {
+          "id": 1,
+          "name": "admin"
+        },
+        {
+          "id": 2,
+          "name": "shop_owner"
+        },
+        {
+          "id": 3,
+          "name": "employee"
+        }
+      ],
+
+      "employees": [
+        {
+          "id": 1,
+          "role_id": 2,
+          "first_name": "abhishek",
+          "last_name": "garfield",
+          "dob": "23-04-1999",
+          "phone_no": 9459163151,
+          "id_proof": "www.adhar",
+          "address": "hm 131 mohali",
+          "email": "abhishek2759@gmail.com",
+          "is_verified": true,
+          "is_approved": true
+        }
+      ],
+
+      "customers": [
+        {
+          "id": 1,
+          "first_name": "Anuja",
+          "last_name": "garfield",
+          "dob": "02-11-2000",
+          "phone_no": 9459455343,
+          "address": "hm 131 mohali",
+          "email": "abhishek2759@gmail.com",
+          "is_verified": true
+        }
+      ],
+
+      "memberships": [
+        {
+          "id": 1,
+          "shop_id": 1,
+          "customer_id": 1,
+          "approved_by": 1,
+          "amount": 3000
+        }
+      ],
+
+      "transaction_type": [
+        {
+          "id": 1,
+          "name": "deposit"
+        },
+        {
+          "id": 2,
+          "name": "withdrawal"
+        }
+      ],
+
+      "orders": [
+        {
+          "id": 1,
+          "membership_id": 1,
+          "order_amount": 2000
+        }
+      ],
+
+      "order_items": [
+        {
+          "id": 1,
+          "item_id": 2,
+          "quantity": 2,
+          "order_id": 1
+        }
+      ],
+
+      "transactions": [
+        {
+          "id": 1,
+          "order_id": 1,
+          "transaction_type": 2,
+          "amount": 3000,
+          "creator_id": 1,
+          "approved_by": 1
+        }
+      ],
+
+      "item_categories": [
+        {
+          "id": 1,
+          "name": "milk products"
+        },
+        {
+          "id": 2,
+          "name": "cosmetics"
+        },
+        {
+          "id": 3,
+          "name": "bakery"
+        }
+      ],
+
+      "shop_iems": [
+        {
+          "id": 1,
+          "name": "shampoo",
+          "category_id": 1,
+          "price": 100,
+          "image": ""
+        },
+        {
+          "id": 2,
+          "name": "milk",
+          "category_id": 2,
+          "price": 30,
+          "image": ""
+        }
+      ]
+    }
+  ]
