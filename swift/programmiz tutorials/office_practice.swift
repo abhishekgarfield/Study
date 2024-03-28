@@ -14,8 +14,8 @@ var num5:Int? = 12; // optionals
 
 
 var str45 = "asdasdasd";
-print("=--------",str45.distance(from: str.startIndex, to:str45.firstIndex(of: "s")! ))
-print("------ sytr ---",str45.firstIndex(of: "s")?.encodedOffset) //deprecated
+print("=--------",str45.distance(from: str45.startIndex, to:str45.firstIndex(of: "s")! ))
+// print("------ sytr ---",str45.firstIndex(of: "s")?.encodedOffset) //deprecated
 
 var multString1:String = """
 hi this is
@@ -519,9 +519,9 @@ var range2 = ..<3
 
 print("----- one sided range ----\(range.contains(2))------\(range2.contains(-1))")
 
-var arr = [1,2,3,4]
+var arr234 = [1,2,3,4]
 
-print("---- print array elements using range -----\(arr[2...])")
+print("---- print array elements using range -----\(arr234[2...])")
 
 // function overloading ... swift can have multiple functions with sam ename
 // function overloading depends on paramneter typesnot return type
@@ -634,9 +634,9 @@ var obj2 = Cls()
 
 obj2.name = "test234";
 print("--obj2 changes ----\(obj2.name)---")
-var arr:[Int] = [1,2,3,4];
+var arr54:[Int] = [1,2,3,4];
 
-print("-----\(arr[0...2])-")
+print("-----\(arr54[0...2])-")
 var test1000:Int = 34
 
 // class to check area of room and store dimensions
@@ -992,7 +992,7 @@ switch(Carrvar){
 //A class can have only one object is called singlton class // basically it is  a design pattern
 
 class Fileaccess{
-    static let fileObj = Fileaccess();
+    static  let fileObj = Fileaccess();
 
     init(){
 
@@ -1111,7 +1111,7 @@ classInfoobj1.Display();
 class cLASSiNFO2{
     private var cls:Int = 10
 
-     func Display(){
+    func Display(){
         print("------- public method ------",cls)
     }
 }
@@ -1164,6 +1164,15 @@ if(strobj134 != strobj136){
     print("=========obj1 is not equal to 3")
 }
 
+var arr109 = [34,45,67,89]
+
+arr109.forEach({(i) in
+print("----- hello for each ----",i)})
+
+arr109.forEach{i in
+print("------i----",i)}
+
+arr109.forEach({print("-----",$0)})
 // ************ strong and weak refrences ****************
 //Arc (Automatic refrence counting) is used to allocate nd deallocate memory automatically in swift
 
