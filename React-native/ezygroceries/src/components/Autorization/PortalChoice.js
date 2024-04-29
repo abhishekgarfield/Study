@@ -5,72 +5,31 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import PortalChoiceBackground from './portalChoiceBackground';
-const PortalChoice = () => {
+import authorizationStyles from '../../styles/authorizationStyles';
+const PortalChoice = ({navigation}) => {
   return (
     <PortalChoiceBackground>
       <TouchableOpacity
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          padding: 20,
-          paddingHorizontal: 40,
-          justifyContent: 'space-between',
-          borderRadius: 5,
-          margin: 10,
-          marginBottom: 5,
-        }}>
+      onPress={()=>navigation.navigate('authModal',{userType: 'customer'})}
+        style={authorizationStyles.buttonStyles}>
         <Text
-          style={{
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: '600',
-            letterSpacing: 1,
-            fontSize: 20,
-          }}>
+          style={authorizationStyles.buttonTextStyle}>
           CUSTOMER
         </Text>
         <Text
-          style={{
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: '500',
-            letterSpacing: 1,
-            fontSize: 20,
-          }}>
+          style={authorizationStyles.buttonTextStyle}>
           >
         </Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          padding: 20,
-          paddingHorizontal: 40,
-          justifyContent: 'space-between',
-          borderRadius: 5,
-          margin: 10,
-          marginTop: 0,
-        }}>
+      onPress={()=>{navigation.navigate('authModal',{userType: 'shopper'})}}
+        style={authorizationStyles.buttonStyles}>
         <Text
-          style={{
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: '600',
-            letterSpacing: 1,
-            fontSize: 20,
-          }}>
+          style={authorizationStyles.buttonTextStyle}>
           SHOPPER
         </Text>
         <Text
-          style={{
-            color: 'white',
-            textAlign: 'center',
-            fontWeight: '500',
-            letterSpacing: 1,
-            fontSize: 20,
-          }}>
+          style={authorizationStyles.buttonTextStyle}>
           >
         </Text>
       </TouchableOpacity>
@@ -78,15 +37,6 @@ const PortalChoice = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  inputField: {
-    display: 'flex',
-    borderColor: 'black',
-    borderWidth: 5,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: 'lightgray',
-  },
-});
+
 export default PortalChoice;
 
