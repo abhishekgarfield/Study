@@ -6,6 +6,8 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon2 from 'react-native-vector-icons/FontAwesome';
 import PortalChoiceBackground from './portalChoiceBackground';
 
 import {logo} from '../../assets/images';
@@ -31,11 +33,7 @@ const AuthModal = ({route}) => {
       <View>
         {authType == 'signUp' && (
           <View style={styles.inputContainer}>
-            <Image
-              source={logo}
-              style={{height: 44, display: 'flex', flexBasis: '10%'}}
-              resizeMode="contain"
-            />
+            <Icon2 name='user' size={30} color={'white'}/>
             <TextInput
               value={user.name}
               keyboardType="default"
@@ -47,11 +45,7 @@ const AuthModal = ({route}) => {
         )}
 
         <View style={styles.inputContainer}>
-          <Image
-            source={logo}
-            style={{height: 44, display: 'flex', flexBasis: '10%'}}
-            resizeMode="contain"
-          />
+        <Icon name='email' size={30} color={'white'}/>
           <TextInput
             value={user.email}
             placeholderTextColor={'white'}
@@ -60,11 +54,7 @@ const AuthModal = ({route}) => {
           />
         </View>
         <View style={styles.inputContainer}>
-          <Image
-            source={logo}
-            style={{height: 44, display: 'flex', flexBasis: '10%'}}
-            resizeMode="contain"
-          />
+        <Icon name='onepassword' size={30} color={'white'}/>
           <TextInput
             value={user.password}
             placeholderTextColor={'white'}
@@ -75,11 +65,7 @@ const AuthModal = ({route}) => {
         {authType == 'signUp' && (
           <View>
             <View style={styles.inputContainer}>
-              <Image
-                source={logo}
-                style={{height: 44, display: 'flex', flexBasis: '10%'}}
-                resizeMode="contain"
-              />
+            <Icon name='form-textbox-password' size={30} color={'white'}/>
 
               <TextInput
                 value={user.confirmPassword}
@@ -89,11 +75,7 @@ const AuthModal = ({route}) => {
               />
             </View>
             <View style={styles.inputContainer}>
-              <Image
-                source={logo}
-                style={{height: 44, display: 'flex', flexBasis: '10%'}}
-                resizeMode="contain"
-              />
+            <Icon name='phone' size={30} color={'white'}/>
               <TextInput
                 value={user.phone}
                 placeholderTextColor={'white'}
