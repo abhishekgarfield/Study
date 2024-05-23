@@ -50,12 +50,14 @@ const PortalChoiceBackground = ({children}) => {
                 <Text
                   style={{
                     lineHeight: 20,
+                    fontWeight:'400',
                     marginTop: 10,
                     textAlign: 'center',
                     fontWeight: '500',
                   }}>
-                  We are here to provide ezy
-                  groceriesfsdfasdfsdfdfsdfgdsfgsdfgsdfgsdfgsdfgdsfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgdsfg
+                    {"Lets save " }<Text style={{color:'green',fontWeight:'700'}}>{"enviornement !"}</Text>{"\n"+
+                    "by eliminating paper based coupon system.\n"+
+                    "We are here to provide ezy groceries."}
                 </Text>
               </View>
               {children}
