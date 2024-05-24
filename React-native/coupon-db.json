@@ -11,6 +11,7 @@
           "name": "garfield pvt ltd",
           "web_url": "www.google.com",
           "is_verified": true,
+          "gst_no":11212,
           "description": "hello this is description of shop"
         }
       ],
@@ -27,6 +28,9 @@
         {
           "id": 3,
           "name": "employee"
+        },{
+          "id":4,
+          "name":"customer"
         }
       ],
 
@@ -35,11 +39,14 @@
           "id": 1,
           "role_id": 2,
           "first_name": "abhishek",
+          "shop_id":1,
           "last_name": "garfield",
           "dob": "23-04-1999",
           "phone_no": 9459163151,
           "id_proof": "www.adhar",
           "address": "hm 131 mohali",
+          "landmark":"",
+          "city":"",
           "email": "abhishek2759@gmail.com",
           "is_verified": true,
           "is_approved": true
@@ -54,6 +61,8 @@
           "dob": "02-11-2000",
           "phone_no": 9459455343,
           "address": "hm 131 mohali",
+          "landmark":"",
+          "city":"",
           "email": "abhishek2759@gmail.com",
           "is_verified": true
         }

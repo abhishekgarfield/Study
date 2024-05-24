@@ -1,0 +1,6 @@
+      invoke  active_record
+      create    db/migrate/20240524160436_create_shops.rb
+      create    app/models/shop.rb
+      invoke    test_unit
+      create      test/models/shop_test.rb
+      create      test/fixtures/shops.yml

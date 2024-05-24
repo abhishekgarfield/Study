@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import PortalChoiceBackground from './portalChoiceBackground';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {logo} from '../../assets/images';
 import {useEffect, useState} from 'react';
@@ -24,6 +25,7 @@ const AuthModal = ({route}) => {
     phone: '',
     password: '',
     confirmPassword: '',
+    dob:new Date()
   });
   const handleInput = (name, value) => {
     setUser({...user, [name]: value});
@@ -137,6 +139,21 @@ const AuthModal = ({route}) => {
                 placeholder="Phone no."
                 onChangeText={value => {
                   handleInput('phone', value);
+                }}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <Icon name="calendar" size={30} color={'white'} />
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={user.dob}
+                mode={'date'}
+                display='default'
+                textColor='white'
+                themeVariant='dark'
+                onChange={(event, selectedDate) => {
+                  handleInput('dob',selectedDate);
+                  console.log('----text-----', selectedDate,);
                 }}
               />
             </View>

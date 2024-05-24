@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  web_url: MyString
+  gst_no: 1
+  is_verified: false
+  default=: MyString
+  description: MyText
+
+two:
+  name: MyString
+  web_url: MyString
+  gst_no: 1
+  is_verified: false
+  default=: MyString
+  description: MyText
