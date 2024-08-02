@@ -11,11 +11,12 @@ import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import PortalChoiceBackground from './portalChoiceBackground';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {logo} from '../../assets/images';
+import {logo2} from '../../assets/images';
 import {useEffect, useState} from 'react';
-import {appBasicColor} from '../Common/colors';
-const AuthModal = ({route}) => {
-  const [authType, setAuthType] = useState('signUp');
+import {errorColor, linkColor, primaryColor, secondaryColor} from '../Common/colors';
+import { Title, text } from '../../assets/fonts';
+const AuthModal = ({route,navigation}) => {
+  const [authType, setAuthType] = useState('logIn');
   const {userType} = route.params;
   const [error, setError] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
@@ -29,16 +30,20 @@ const AuthModal = ({route}) => {
   });
   const handleInput = (name, value) => {
     setUser({...user, [name]: value});
-    console.log('---user----', user);
   };
   const validateUser = () => {
     const {name, email, password, confirmPassword, phone} = user;
-    console.log('---user----', authType, user);
     if (authType == 'logIn') {
       if (!(email && password)) {
         setError('All fields are required');
-        console.log('---- one of the fields is empty444---');
+      }else{
+        setError("")
       }
+      navigation.navigate('otpVerification',{
+        user:{
+          email:'abhishek2759@gmail.com'
+        }
+      })
     } else {
       if (!(name && email && password && confirmPassword && phone)) {
         setError('All fields are required');
@@ -59,6 +64,7 @@ const AuthModal = ({route}) => {
     }
   };
   useEffect(() => {
+    fetch("http://localhost:3000/api/v1/shops").then(res => res.json()).then((data)=>console.log("---data---",data)).catch(err => console.log(err))
     // setUserType(route.params.userType)
   }, []);
   return (
@@ -109,7 +115,7 @@ const AuthModal = ({route}) => {
             <Icon
               name={hidePassword ? 'eye' : 'eye-off'}
               size={30}
-              color={appBasicColor}
+              color={primaryColor}
             />
           </TouchableOpacity>
         </View>
@@ -144,6 +150,7 @@ const AuthModal = ({route}) => {
             </View>
             <View style={styles.inputContainer}>
               <Icon name="calendar" size={30} color={'white'} />
+              <Text style={styles.inputField}>DOB</Text>
               <DateTimePicker
                 testID="dateTimePicker"
                 value={user.dob}
@@ -167,13 +174,13 @@ const AuthModal = ({route}) => {
               flexDirection: 'row',
               marginBottom: 8,
             }}>
-            <Icon2 name="error" size={30} color={'red'} />
+            <Icon2 name="error" size={25} color={errorColor} />
             <Text
               style={{
                 color: 'red',
-                fontWeight: '800',
+                fontWeight: '500',
                 padding: 5,
-                elevation: 4,
+                fontFamily:text
               }}>
               {error}
             </Text>
@@ -186,7 +193,7 @@ const AuthModal = ({route}) => {
           style={{
             display: 'flex',
             flexDirection: 'row',
-            backgroundColor: appBasicColor,
+            backgroundColor: primaryColor,
             paddingVertical: 13,
             borderWidth: 0,
             alignItems: 'center',
@@ -219,9 +226,10 @@ const AuthModal = ({route}) => {
             padding: 5,
             shadowRadius: 3,
             shadowColor: 'white',
-            shadowOpacity: 1,
-            shadowOffset: {width: 0, height: 1},
+            shadowOpacity: 0.9,
+            shadowOffset: {width: 0, height: 3},
             elevation: 4,
+            fontFamily:text
           }}
           onPress={() => {
             setUser({
@@ -230,11 +238,12 @@ const AuthModal = ({route}) => {
               phone: '',
               password: '',
               confirmPassword: '',
+              dob:new Date()
             });
             setError('');
             setAuthType(authType == 'logIn' ? 'signUp' : 'logIn');
           }}>
-          <Text style={{color: 'blue', fontSize: 15, fontWeight: '700'}}>
+          <Text style={{color: linkColor, fontSize: 15, fontWeight: '500', fontFamily:Title}}>
             {authType == 'logIn'
               ? 'Not registered yet ! sign up ? '
               : 'Already an user ! log in ?'}
@@ -253,6 +262,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '500',
+    fontFamily: text
   },
   inputContainer: {
     borderRadius: 5,
@@ -261,9 +271,9 @@ const styles = StyleSheet.create({
     height: 55,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     padding: 10,
-    borderBottomWidth: 3,
+    borderBottomWidth: 1.5,
     marginBottom: 10,
   },
 });

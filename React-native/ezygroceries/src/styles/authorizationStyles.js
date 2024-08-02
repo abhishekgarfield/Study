@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Title } from "../assets/fonts";
 
 const authorizationStyles = StyleSheet.create({
     buttonStyles:{
@@ -20,6 +21,7 @@ const authorizationStyles = StyleSheet.create({
         fontWeight: '600',
         letterSpacing: 1,
         fontSize: 20,
+        fontFamily:Title
     }
 })
 

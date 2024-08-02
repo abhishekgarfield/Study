@@ -11,14 +11,21 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {background1, logo } from '../../assets/images';
-const PortalChoiceBackground = ({children}) => {
+import {background1, logo2 } from '../../assets/images';
+import { BlurView } from '@react-native-community/blur';
+
+const PortalChoiceBackground = ({children,hide}) => {
   return (
     <ImageBackground
       resizeMode="cover"
       source={background1}
       style={{display: 'flex', flex: 1}}
       blurRadius={6}>
+      <BlurView
+        style={styles.absolute}
+        blurType="light"
+        blurAmount={10} // Adjust the blurAmount as needed
+      >
       <SafeAreaView style={{flex: 1, display:'flex',justifyContent:'center'}}>
         <KeyboardAvoidingView
           style={{display: 'flex',paddingHorizontal:10}}
@@ -34,18 +41,18 @@ const PortalChoiceBackground = ({children}) => {
                   alignItems: 'center',
                 }}>
                 <Image
-                  source={logo}
+                  source={logo2}
                   resizeMode="contain"
                   style={{height: 200, width: 200}}
                 />
+                { !hide &&<>
                 <Text
                   style={{
                     marginTop: 10,
                     fontSize: 30,
-                    fontWeight: '700',
-                    fontFamily: 'cursive',
+                    fontFamily: 'OpenSans-Bold',
                   }}>
-                  EZY GROCERIE
+                  EZY GROCERIES
                 </Text>
                 <Text
                   style={{
@@ -54,11 +61,12 @@ const PortalChoiceBackground = ({children}) => {
                     marginTop: 10,
                     textAlign: 'center',
                     fontWeight: '500',
+                    fontFamily:'OpenSans_SemiCondensed-Bold'
                   }}>
-                    {"Lets save " }<Text style={{color:'green',fontWeight:'700'}}>{"enviornement !"}</Text>{"\n"+
+                    {"Let's save " }<Text style={{color:'green',fontWeight:'700',fontFamily:'OpenSans-BoldItalic'}}>{"environment !"}</Text>{"\n"+
                     "by eliminating paper based coupon system.\n"+
                     "We are here to provide ezy groceries."}
-                </Text>
+                </Text></>}
               </View>
               {children}
               <TextInput />
@@ -66,6 +74,7 @@ const PortalChoiceBackground = ({children}) => {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      </BlurView>
     </ImageBackground>
   );
 };
@@ -79,6 +88,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'lightgray',
   },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  }
 });
 export default PortalChoiceBackground;
 

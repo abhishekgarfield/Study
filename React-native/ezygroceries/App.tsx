@@ -1,21 +1,31 @@
 import * as React from 'react';
-import PortalChoice from './src/components/Autorization/PortalChoice';
-import AuthModal from './src/components/Autorization/authModal';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {View} from 'react-native';
+import Root from './Root';
+import {useEffect} from 'react';
 
-const LoginStack = createNativeStackNavigator()
+import FlashMessage from 'react-native-flash-message';
+import SplashScreen from 'react-native-splash-screen';
+
 const App = () => {
+  useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      SplashScreen.hide();
+    }, 2000);
+
+    return () => clearTimeout(splashTimer);
+  }, []);
   return (
-    <NavigationContainer>
-      <LoginStack.Navigator screenOptions={{
-        headerShown:false
-      }}>
-          <LoginStack.Screen name={'potalChoice'} component={PortalChoice}></LoginStack.Screen>
-          <LoginStack.Screen name={'authModal'} component={AuthModal}></LoginStack.Screen>
-      </LoginStack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Root />
+      <FlashMessage position={'top'} />
+    </View>
   );
+};
+
+const styles = {
+  container: {
+    flex: 1,
+  },
 };
 
 export default App;
