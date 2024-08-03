@@ -10,22 +10,21 @@ import {
   ImageBackground,
   ScrollView,
   Platform,
+  StatusBar,
 } from 'react-native';
 import {background1, logo2 } from '../../assets/images';
 import { BlurView } from '@react-native-community/blur';
+import { black } from '../Common/colors';
 
 const PortalChoiceBackground = ({children,hide}) => {
+  console.log("----he;lllooo---")
   return (
     <ImageBackground
       resizeMode="cover"
       source={background1}
       style={{display: 'flex', flex: 1}}
-      blurRadius={6}>
-      <BlurView
-        style={styles.absolute}
-        blurType="light"
-        blurAmount={10} // Adjust the blurAmount as needed
-      >
+      blurRadius={7}>
+      <StatusBar  backgroundColor={'#e7e7e9'}/>
       <SafeAreaView style={{flex: 1, display:'flex',justifyContent:'center'}}>
         <KeyboardAvoidingView
           style={{display: 'flex',paddingHorizontal:10}}
@@ -51,17 +50,18 @@ const PortalChoiceBackground = ({children,hide}) => {
                     marginTop: 10,
                     fontSize: 30,
                     fontFamily: 'OpenSans-Bold',
+                    color: black
                   }}>
                   EZY GROCERIES
                 </Text>
                 <Text
                   style={{
+                    color:'rgba(0,0,0,0.7)',
                     lineHeight: 20,
                     fontWeight:'400',
-                    marginTop: 10,
                     textAlign: 'center',
                     fontWeight: '500',
-                    fontFamily:'OpenSans_SemiCondensed-Bold'
+                    fontFamily:'OpenSans_SemiCondensed-Bold',
                   }}>
                     {"Let's save " }<Text style={{color:'green',fontWeight:'700',fontFamily:'OpenSans-BoldItalic'}}>{"environment !"}</Text>{"\n"+
                     "by eliminating paper based coupon system.\n"+
@@ -74,7 +74,6 @@ const PortalChoiceBackground = ({children,hide}) => {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-      </BlurView>
     </ImageBackground>
   );
 };

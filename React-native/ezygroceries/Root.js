@@ -12,9 +12,7 @@ const Stack = createNativeStackNavigator()
 const LoginStack = () =>{
     return(
         <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
+        screenOptions={{headerShown:false,animation:'default',animationDuration:1000,}}>
         <Stack.Screen
           name={'potalChoice'}
           component={PortalChoice}></Stack.Screen>
@@ -39,7 +37,8 @@ const HomeStack = () =>{
 const Root = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Navigator screenOptions={{headerShown:false,animation:'slide_from_left',animationDuration:1000,gestureDirection:'horizontal',
+          presentation: 'card',}} initialRouteName='login'>
         <Stack.Screen component={LoginStack} name="login" />
         <Stack.Screen component={HomeStack} name="home" />
       </Stack.Navigator>
