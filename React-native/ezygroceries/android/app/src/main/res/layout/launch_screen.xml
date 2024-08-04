@@ -19,8 +19,7 @@
         android:layout_marginTop="16dp"
         android:text="Let's save environment!"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:fontFamily="@font/bradley_hand"
         android:textStyle="bold" />
-
 </RelativeLayout>

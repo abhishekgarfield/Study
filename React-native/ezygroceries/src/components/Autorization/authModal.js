@@ -87,9 +87,11 @@ const AuthModal = ({route, navigation}) => {
   };
   useEffect(() => {
     // fetch("http://localhost:3000/api/v1/shops").then(res => res.json()).then((data)=>console.log("---data---",data)).catch(err => console.log(err))
-    BackHandler.addEventListener('hardwareBackPress',()=>{
+    const backHandle = BackHandler.addEventListener('hardwareBackPress',()=>{
       return false;
     })
+
+    return () => backHandle.remove()
   }, []);
   return (
     <PortalChoiceBackground>

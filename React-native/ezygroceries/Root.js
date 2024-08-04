@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OtpVerification from './src/components/Autorization/otpVerification';
 import Home from './src/components/screens/Homescreen';
 import { useEffect } from 'react';
+import { Alert, BackHandler } from 'react-native';
 
 const Stack = createNativeStackNavigator()
 

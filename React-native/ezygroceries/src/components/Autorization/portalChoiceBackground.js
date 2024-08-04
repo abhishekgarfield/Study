@@ -17,7 +17,6 @@ import { BlurView } from '@react-native-community/blur';
 import { black } from '../Common/colors';
 
 const PortalChoiceBackground = ({children,hide}) => {
-  console.log("----he;lllooo---")
   return (
     <ImageBackground
       resizeMode="cover"
@@ -69,7 +68,6 @@ const PortalChoiceBackground = ({children,hide}) => {
                 </Text></>}
               </View>
               {children}
-              <TextInput />
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
