@@ -1,27 +1,50 @@
-import {Alert, Platform, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import PortalChoiceBackground from './portalChoiceBackground';
 import {useEffect, useRef, useState} from 'react';
 import {dispMessage} from '../Common/flashMessages';
 import CountDown from 'react-native-countdown-component';
-import { Title, text } from '../../assets/fonts';
-import { black, linkColor } from '../Common/colors';
+import {Title, text} from '../../assets/fonts';
+import {black, linkColor} from '../Common/colors';
+import OtpVerify from 'react-native-otp-verify';
 
 const OtpVerification = ({navigation, route}) => {
   let otpInput = useRef(null);
   let resendCounter = useRef(10);
   const [isResend, setIsResend] = useState(false);
-
+ const testRef= useRef(null)
   const {user} = route.params;
 
   const reSendOtp = () => {
-    otpInput.current?.setValue('123456')
+    otpInput.current?.setValue('123456');
     dispMessage('success', 'Success', 'Otp has been sent successfully.');
     setIsResend(false);
     resendCounter.current += 30;
   };
   useEffect(() => {
     dispMessage('success', 'Success', 'Otp has been sent successfully.');
+    OtpVerify.getHash((hash)=>{
+      console.log("----hash----",hash)
+    })
+    OtpVerify.startOtpListener((message)=>{
+      console.log("----message---",message)
+      if(message){
+       let otp =  /[0-9]{6}/.exec(message)[0];
+        otpInput.current?.setValue(otp)
+      }
+    }).catch((err)=>{
+      console.log("----err---",err)
+    })
+   return () =>  OtpVerify.removeListener()
   }, []);
   return (
     <PortalChoiceBackground hide={true}>
@@ -32,7 +55,16 @@ const OtpVerification = ({navigation, route}) => {
         </Text>
         <Text style={styles.varificationMessage}>{user.email}</Text>
       </View>
+      <TextInput autoFocus={true} autoComplete="sms-otp"
+      onKeyPress={(e)=>{
+        console.log("----e----",e)
+      }}
+        textContentType="oneTimeCode" onChangeText={(text)=>{
+          console.log("---text=---wwww-",text)
+        }}/>
       <OTPTextInput
+        autoComplete="sms-otp"
+        textContentType="oneTimeCode"
         autoFocus={true}
         ref={e => (otpInput.current = e)}
         inputCount={6}
@@ -43,16 +75,20 @@ const OtpVerification = ({navigation, route}) => {
           height: 55,
           borderColor: 'black',
           backgroundColor: 'rgba(0,0,0,0.3)',
-          maxWidth:42,
-          minWidth:30
+          maxWidth: 42,
+          minWidth: 30,
+          fontWeight:'700'
         }}
         containerStyle={{
-          justifyContent:'center',
+          justifyContent: 'center',
 
-          width:'100%',
-          flexWrap:'wrap'
+          width: '100%',
+          flexWrap: 'wrap',
         }}
         keyboardType="numeric"
+        onTextChange = {(e)=>{
+          console.log("-----e---e----",e)
+        }}
         handleTextChange={text => {
           if (text.length == 6) {
             if (text == '111111') {
@@ -65,37 +101,35 @@ const OtpVerification = ({navigation, route}) => {
       />
       <View style={styles.resendContainer}>
         <TouchableWithoutFeedback
-        onPress={()=>{
-          if(isResend){
-            reSendOtp()
-          }
-        }}>
-          <View
-          style={{
-            shadowRadius: 3.84,
-            shadowColor: 'white',
-            shadowOpacity: 0.7,
-            shadowOffset: {width: 0, height: 0},
-            elevation: 4,
+          onPress={() => {
+            if (isResend) {
+              reSendOtp();
+            }
           }}>
-
-
-          <Text
+          <View
             style={{
-              ...styles.varificationMessage,
-              fontSize: 12,
-              marginRight: 4,
-              fontWeight: '700',
-              fontFamily:text,
               shadowRadius: 3.84,
               shadowColor: 'white',
-              shadowOpacity: 1,
+              shadowOpacity: 0.7,
               shadowOffset: {width: 0, height: 0},
               elevation: 4,
-              color:linkColor
             }}>
-            {isResend ? 'Resend otp' : 'Resend code in'}
-          </Text>
+            <Text
+              style={{
+                ...styles.varificationMessage,
+                fontSize: 12,
+                marginRight: 4,
+                fontWeight: '700',
+                fontFamily: text,
+                shadowRadius: 3.84,
+                shadowColor: 'white',
+                shadowOpacity: 1,
+                shadowOffset: {width: 0, height: 0},
+                elevation: 4,
+                color: linkColor,
+              }}>
+              {isResend ? 'Resend otp' : 'Resend code in'}
+            </Text>
           </View>
         </TouchableWithoutFeedback>
         <CountDown
@@ -110,6 +144,7 @@ const OtpVerification = ({navigation, route}) => {
             width: 20,
             height: 25,
             fontSize: 10,
+            marginBottom:10
           }}
           digitTxtStyle={{
             color: 'white',
@@ -130,17 +165,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   verificationTitle: {
-    fontFamily:Title,
+    fontFamily: Title,
     fontSize: 25,
     fontWeight: '700',
-    color: black
+    color: black,
   },
   varificationMessage: {
     color: 'rgba(0, 0, 0, 0.6)',
     fontWeight: Platform.OS == 'ios' ? '200' : 'normal',
     fontSize: 16,
-    fontFamily:text,
-    color: black
+    fontFamily: text,
+    color: black,
   },
   resendContainer: {
     display: 'flex',

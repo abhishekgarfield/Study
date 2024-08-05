@@ -102,7 +102,6 @@ const AuthModal = ({route, navigation}) => {
             <TextInput
               autoComplete="sms-otp"
               textContentType="oneTimeCode"
-              autoCorrect={false}
               value={user.name}
               placeholderTextColor={'white'}
               style={styles.inputField}
