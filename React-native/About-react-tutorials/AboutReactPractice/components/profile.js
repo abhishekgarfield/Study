@@ -1,10 +1,12 @@
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
-const Profile = () =>{
+const Profile = ({navigation}) =>{
     return(
-        <View>
+        <TouchableOpacity onPress={()=>{
+            navigation.navigate('Test')
+        }}>
             <Text>Profile</Text>
-        </View>
+        </TouchableOpacity>
     )
 }
 

@@ -1,3 +1,0 @@
-const DROPAREA_MARGIN = 20;
-
-export { DROPAREA_MARGIN };

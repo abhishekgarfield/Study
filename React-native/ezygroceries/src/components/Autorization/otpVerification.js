@@ -32,19 +32,27 @@ const OtpVerification = ({navigation, route}) => {
   };
   useEffect(() => {
     dispMessage('success', 'Success', 'Otp has been sent successfully.');
-    OtpVerify.getHash((hash)=>{
-      console.log("----hash----",hash)
-    })
-    OtpVerify.startOtpListener((message)=>{
-      console.log("----message---",message)
-      if(message){
-       let otp =  /[0-9]{6}/.exec(message)[0];
-        otpInput.current?.setValue(otp)
+    if(Platform.OS == 'android')
+      {
+        OtpVerify.getHash((hash)=>{
+          console.log("----hash----",hash)
+        })
+        OtpVerify.startOtpListener((message)=>{
+          console.log("----message---",message)
+          if(message){
+           let otp =  /[0-9]{6}/.exec(message)[0];
+            otpInput.current?.setValue(otp)
+          }
+        }).catch((err)=>{
+          console.log("----err---",err)
+        })
       }
-    }).catch((err)=>{
-      console.log("----err---",err)
-    })
-   return () =>  OtpVerify.removeListener()
+
+   return () =>  {
+    if(Platform.OS == 'android'){
+      OtpVerify.removeListener()
+    }
+   }
   }, []);
   return (
     <PortalChoiceBackground hide={true}>

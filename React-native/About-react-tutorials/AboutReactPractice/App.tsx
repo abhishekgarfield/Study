@@ -14,6 +14,7 @@ import Profile from './components/profile';
 import {useEffect} from 'react';
 import Geolocation from '@react-native-community/geolocation';
 import { request } from 'react-native-permissions';
+import Test from './components/test';
 LogBox.ignoreAllLogs();
 
 /*
@@ -98,6 +99,7 @@ const SecontabStack = () => {
   return (
     <ThirdStack.Navigator>
       <ThirdStack.Screen component={Profile} name="Profile" />
+      <ThirdStack.Screen component={Test} name="Test" />
     </ThirdStack.Navigator>
   );
 };
