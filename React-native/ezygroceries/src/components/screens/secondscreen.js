@@ -1,13 +1,13 @@
 import { Text, View } from "react-native"
 
-const Profile = () => {
+const Second = () => {
     return(
         <View>
             <Text>
-                profile
+            Second
             </Text>
         </View>
     )
 }
 
-export default Profile;
+export default Second;
