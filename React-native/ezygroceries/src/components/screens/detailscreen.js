@@ -1,13 +1,12 @@
-import { Text, View } from "react-native"
+import {SafeAreaView, Text, View} from 'react-native';
+import MainHeader from '../Common/headers';
 
-const Detail = () =>{
-    return(
-        <View>
-            <Text>
-                detail screen
-            </Text>
-        </View>
-    )
-}
+const Order = () => {
+  return (
+    <SafeAreaView>
+      <MainHeader />
+    </SafeAreaView>
+  );
+};
 
-export default Detail;
+export default Order;

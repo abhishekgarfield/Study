@@ -1,13 +1,12 @@
-import { Text, View } from "react-native"
+import {SafeAreaView, Text, View} from 'react-native';
+import MainHeader from '../Common/headers';
 
-const Stat = () =>{
-    return(
-        <View>
-            <Text>
-                stat screen
-            </Text>
-        </View>
-    )
-}
+const Stat = () => {
+  return (
+    <SafeAreaView>
+      <MainHeader />
+    </SafeAreaView>
+  );
+};
 
 export default Stat;

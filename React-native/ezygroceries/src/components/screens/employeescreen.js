@@ -1,13 +1,12 @@
-import { Text, View } from "react-native"
+import {SafeAreaView, Text, View} from 'react-native';
+import MainHeader from '../Common/headers';
 
 const Employee = () => {
-    return(
-        <View>
-            <Text>
-                Employee screen
-            </Text>
-        </View>
-    )
-}
+  return (
+    <SafeAreaView>
+      <MainHeader />
+    </SafeAreaView>
+  );
+};
 
 export default Employee;
