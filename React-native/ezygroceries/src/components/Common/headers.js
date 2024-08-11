@@ -1,4 +1,6 @@
 import {
+  Animated,
+  Easing,
   Image,
   Text,
   TouchableOpacity,
@@ -8,9 +10,11 @@ import {
 import {AntDesign, Ionicons} from '../../assets/icons';
 import {Title, smallTitles} from '../../assets/fonts';
 import {mainHeaderStyles} from '../../styles/mainHeaderStyles';
-import {useNavigation} from '@react-navigation/native';
+import {TabRouter, useNavigation} from '@react-navigation/native';
+import {useEffect, useRef} from 'react';
 
 const MainHeader = () => {
+  const headerAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const user = {
     image: require('../../assets/images/sampDp2.jpg'),
@@ -18,8 +22,31 @@ const MainHeader = () => {
     last_name: 'garfield',
     user_name: 'garfield1859',
   };
+  const onFocus = () => {
+    headerAnim.setValue(0)
+    Animated.timing(headerAnim,{
+      easing:Easing.back(),
+      useNativeDriver:true,
+      toValue:1
+    }).start()
+  };
+  useEffect(() => {
+    const unsubNavigation = navigation.addListener('focus',onFocus)
+    return unsubNavigation
+  },[]);
   return (
-    <View style={mainHeaderStyles.topView}>
+    <Animated.View
+      style={{
+        ...mainHeaderStyles.topView,
+        transform: [
+          {
+            scale: headerAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            }),
+          },
+        ],
+      }}>
       <TouchableWithoutFeedback
         onPress={() => {
           navigation.toggleDrawer();
@@ -42,9 +69,8 @@ const MainHeader = () => {
           <Ionicons name={'notifications-outline'} size={25} color={'black'} />
         </View>
       </View>
-    </View>
+    </Animated.View>
   );
 };
-
 
 export default MainHeader;
