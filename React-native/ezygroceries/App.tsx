@@ -10,13 +10,13 @@ import SplashScreen from 'react-native-splash-screen';
 
 console.warn = () => {};
 LogBox.ignoreLogs(['Warning: ...']);
-
+LogBox.ignoreAllLogs()
 
 const App = () => {
   useEffect(() => {
     const splashTimer = setTimeout(() => {
       SplashScreen.hide();
-    }, 1000);
+    }, 0);
 
     return () => clearTimeout(splashTimer);
   }, []);

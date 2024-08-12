@@ -45,8 +45,6 @@
           "phone_no": 9459163151,
           "id_proof": "www.adhar",
           "address": "hm 131 mohali",
-          "landmark":"",
-          "city":"",
           "email": "abhishek2759@gmail.com",
           "is_verified": true,
           "is_approved": true
@@ -61,8 +59,6 @@
           "dob": "02-11-2000",
           "phone_no": 9459455343,
           "address": "hm 131 mohali",
-          "landmark":"",
-          "city":"",
           "email": "abhishek2759@gmail.com",
           "is_verified": true
         }

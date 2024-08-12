@@ -36,11 +36,12 @@ const Home = ({navigation}) => {
 
 
 const onFocus = () =>{
-    console.log("ASDASDASD",quoteAnimation.current)
+    console.log("ASDASDASD-------",quoteAnimation.current)
     quoteAnimation.setValue(0)
     Animated.spring(quoteAnimation,{
         useNativeDriver:true,
         toValue:1,
+        delay:100
     }).start(({finished})=>{
         if(finished){
             console.log("---fisnis",finished,quoteAnimation.current)

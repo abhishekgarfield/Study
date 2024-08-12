@@ -10,12 +10,13 @@ import {
 import {AntDesign, Ionicons} from '../../assets/icons';
 import {Title, smallTitles} from '../../assets/fonts';
 import {mainHeaderStyles} from '../../styles/mainHeaderStyles';
-import {TabRouter, useNavigation} from '@react-navigation/native';
+import {TabRouter, useNavigation, useRoute} from '@react-navigation/native';
 import {useEffect, useRef} from 'react';
 
 const MainHeader = () => {
   const headerAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const route = useRoute()
   const user = {
     image: require('../../assets/images/sampDp2.jpg'),
     first_name: 'Abhishek',
@@ -23,17 +24,17 @@ const MainHeader = () => {
     user_name: 'garfield1859',
   };
   const onFocus = () => {
-    headerAnim.setValue(0)
-    Animated.timing(headerAnim,{
-      easing:Easing.back(),
-      useNativeDriver:true,
-      toValue:1
-    }).start()
+    headerAnim.setValue(0);
+    Animated.spring(headerAnim, {
+      useNativeDriver: true,
+      toValue: 1,
+      delay: route.name == 'Home' && 100,
+    }).start();
   };
   useEffect(() => {
-    const unsubNavigation = navigation.addListener('focus',onFocus)
-    return unsubNavigation
-  },[]);
+    const unsubNavigation = navigation.addListener('focus', onFocus);
+    return unsubNavigation;
+  }, []);
   return (
     <Animated.View
       style={{
