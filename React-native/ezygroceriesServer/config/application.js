@@ -1,3 +1,3 @@
-import {db} from "./enviornments/development";
+import {db} from "./enviornments/development.js";
 
 export {db};

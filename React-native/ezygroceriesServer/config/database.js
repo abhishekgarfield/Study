@@ -4,10 +4,10 @@ import * as dotenv from "dotenv"
 dotenv.config();
 
 const db = mysql2.createPool({
-    user:DATABASE_USER,
-    password:DATABASE_PASSWORD,
-    database:DATABASE_NAME,
-    host: DATABASE_HOST
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    host: process.env.DATABASE_HOST
 }).promise()
 
 export default db;
