@@ -179,7 +179,7 @@ const Root = () => {
           headerShown: false,
         }}
 
-        initialRouteName="HomeStack">
+        initialRouteName="Login">
         <Stack.Screen component={LoginStack} name="Login" />
         <Stack.Screen component={HomeStack} name="HomeStack" />
       </Stack.Navigator>

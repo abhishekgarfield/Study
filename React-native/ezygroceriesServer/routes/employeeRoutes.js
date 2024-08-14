@@ -5,6 +5,7 @@ import employeeController from '../controllers/employeeController.js';
 
 const router = express.Router();
 
-router.get('/employees',employeeController.allEmployees);
+router.get('/getAllemployees',employeeController.allEmployees);
+router.get("/login")
 
-export {router as employeeRouter}
+export {router as employeeRoutes}
