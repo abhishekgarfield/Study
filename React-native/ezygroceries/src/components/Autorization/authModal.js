@@ -3,25 +3,21 @@ import {
   View,
   StyleSheet,
   Text,
-  Image,
   TouchableOpacity,
   BackHandler,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon2 from 'react-native-vector-icons/MaterialIcons';
 import PortalChoiceBackground from './portalChoiceBackground';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {logo2} from '../../assets/images';
 import {useEffect, useState} from 'react';
-import {
-  errorColor,
-  linkColor,
-  primaryColor,
-  secondaryColor,
-} from '../Common/colors';
+import {linkColor, primaryColor, white} from '../Common/colors';
 import {Title, text} from '../../assets/fonts';
 import {dispMessage} from '../Common/flashMessages';
+import RNPickerSelect from 'react-native-picker-select';
+import axios from 'axios';
+import {employeeSignup, getAllShops} from '../../apis/api';
+
 const AuthModal = ({route, navigation}) => {
   const [authType, setAuthType] = useState('logIn');
   const {userType} = route.params;
@@ -30,35 +26,54 @@ const AuthModal = ({route, navigation}) => {
   const [error, setError] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [showDate, setShowDate] = useState(false);
+  const [shops, setShops] = useState([]);
   const [user, setUser] = useState({
     name: '',
     email: '',
     phone: '',
     password: '',
     confirmPassword: '',
-    dob: new Date(),
+    shop_id: 'Select shop',
+    dob: new Date().toISOString().split('T')[0],
   });
+
+  const signUp = () => {
+    axios.post(employeeSignup, {user}).then(res => {
+      navigation.navigate('otpVerification', {
+        user: {
+          email: user.email,
+        },
+      });
+    });
+  };
+
   const handleInput = (name, value) => {
     if (name == 'dob') {
       setShowDate(!showDate);
     }
     setUser({...user, [name]: value});
   };
+
   const validateUser = () => {
-    const {name, email, password, confirmPassword, phone} = user;
+    const {name, email, password, confirmPassword, phone, dob, shop_id} = user;
     if (authType == 'logIn') {
       if (!(email && password)) {
         setError('All fields are required');
       } else {
         setError('');
       }
-      navigation.navigate('otpVerification', {
-        user: {
-          email: 'abhishek2759@gmail.com',
-        },
-      });
     } else {
-      if (!(name && email && password && confirmPassword && phone)) {
+      if (
+        !(
+          name &&
+          email &&
+          password &&
+          confirmPassword &&
+          phone &&
+          dob &&
+          shop_id
+        )
+      ) {
         setError('All fields are required');
         dispMessage('danger', 'Error', 'All fields are required');
       } else if (!/^([0-9]{10})$/.test(phone)) {
@@ -81,20 +96,26 @@ const AuthModal = ({route, navigation}) => {
         setError("passwords don't match");
       } else {
         setError('');
+        signUp();
         console.log('---all errors cleared----');
       }
     }
   };
   useEffect(() => {
+    axios.get(getAllShops).then(res => {
+      console.log('---res----', res.data);
+      setShops(res.data);
+    }, []);
     // fetch("http://localhost:3000/api/v1/shops").then(res => res.json()).then((data)=>console.log("---data---",data)).catch(err => console.log(err))
-    const backHandle = BackHandler.addEventListener('hardwareBackPress',()=>{
+    const backHandle = BackHandler.addEventListener('hardwareBackPress', () => {
       return false;
-    })
+    });
 
-    return () => backHandle.remove()
+    return () => backHandle.remove();
   }, []);
   return (
     <PortalChoiceBackground>
+      {console.log("---user.db",user.dob, typeof user.dob)}
       <View>
         {authType == 'signUp' && (
           <View style={styles.inputContainer}>
@@ -177,21 +198,57 @@ const AuthModal = ({route, navigation}) => {
               />
             </View>
             <View style={styles.inputContainer}>
+              <Icon name="shopping" size={30} color={'white'} />
+              <RNPickerSelect
+                style={{
+                  inputIOS: {
+                    paddingVertical: 12,
+                    color: 'white',
+                    paddingRight: 30,
+                    flexGrow: 1,
+                    borderColor: 'black',
+                    paddingHorizontal: 10,
+                    color: 'white',
+                    fontSize: 20,
+                    fontWeight: '500',
+                    fontFamily: text,
+                  },
+                  inputAndroid: {
+                    fontSize: 16,
+                    paddingHorizontal: 10,
+                    paddingVertical: 8,
+                    borderRadius: 8,
+                    paddingRight: 30,
+                    flexGrow: 1,
+                    borderColor: 'black',
+                    paddingHorizontal: 10,
+                    color: 'white',
+                    fontSize: 20,
+                    fontWeight: '500',
+                    fontFamily: text,
+                  },
+                }}
+                onValueChange={value => handleInput('shop_id', value)}
+                items={shops}
+              />
+            </View>
+            <View style={styles.inputContainer}>
               <Icon name="calendar" size={30} color={'white'} />
               <Text onPress={() => setShowDate(true)} style={styles.inputField}>
-                {user.dob ? user.dob.toDateString() : 'DOB'}
+                {user.dob ? user.dob : 'DOB'}
               </Text>
-              {showDate && (
+              {
+              showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
-                  value={user.dob}
+                  value={new Date(user.dob)}
                   mode={'date'}
                   display="default"
                   textColor="white"
                   themeVariant="dark"
                   onChange={(event, selectedDate) => {
-                    handleInput('dob', selectedDate);
-                    console.log('----text-----', selectedDate);
+                    handleInput('dob', new Date(selectedDate).toISOString().split('T')[0]);
+                    console.log('----text-----', new Date(selectedDate).toISOString().split('T')[0]);
                   }}
                 />
               )}
@@ -271,7 +328,7 @@ const AuthModal = ({route, navigation}) => {
               phone: '',
               password: '',
               confirmPassword: '',
-              dob: new Date(),
+              dob: new Date().toISOString().split('T')[0],
             });
             setError('');
             setAuthType(authType == 'logIn' ? 'signUp' : 'logIn');
@@ -283,11 +340,11 @@ const AuthModal = ({route, navigation}) => {
               fontWeight: '500',
               fontFamily: Title,
               shadowRadius: 3.84,
-            shadowColor: 'white',
-            shadowOpacity: 1,
-            shadowOffset: {width: 0, height: 0},
-            elevation: 1,
-            backgroundColor : "#0000"
+              shadowColor: 'white',
+              shadowOpacity: 1,
+              shadowOffset: {width: 0, height: 0},
+              elevation: 1,
+              backgroundColor: '#0000',
             }}>
             {authType == 'logIn'
               ? 'Not registered yet ! sign up ? '

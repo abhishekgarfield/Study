@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import loggerMiddleware from './middlewares/common/loggerMiddleware.js';
 import authMiddleware from './middlewares/common/authMiddleware.js';
 import errorMiddleware from './middlewares/common/errorMiddleware.js';
+import { shopRoutes } from './routes/shopRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -22,9 +23,11 @@ app.use(express.json());
 // Built-in middleware for parsing URL-encoded request bodies
 app.use(express.urlencoded({ extended: true }));
 
-
+// routes
 app.use("/employees",employeeRoutes)
+app.use("/shops",shopRoutes)
 
+// error handing middleware
 app.use(errorMiddleware)
 
 app.listen(port, () => {

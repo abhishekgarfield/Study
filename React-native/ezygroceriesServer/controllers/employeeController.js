@@ -1,5 +1,5 @@
 import employeeModal from "../models/employeeModal.js";
-import { compareHashedpass } from "../utils/bcryptUtils.js";
+import { compareHashedpass, encryptPassword } from "../utils/bcryptUtils.js";
 import { generateToken } from "../utils/jwtUtils.js";
 
 const employeeController = {
@@ -44,6 +44,20 @@ const employeeController = {
         });
     } catch (err) {
       console.error("-----employeeController.employeeLogin---", err);
+    }
+  },
+  employeeSignup:async (req, res) => {
+    try {
+      const {user:{name, email, dob, password, shop_id, phone}} = req.body;
+      let hashedPassword =  await encryptPassword(password);
+      employeeModal.employeeSignup(name, name, hashedPassword, dob, phone, email, shop_id).then((result)=>{
+        console.log("------",result)
+        res.status(200).send('User created successfully.')
+      }).catch((err)=>{
+        res.status(409).send('Internal server error');
+      })
+    } catch (err) {
+      console.error("-----employeeController.employeeSignup---", err);
     }
   },
 };
