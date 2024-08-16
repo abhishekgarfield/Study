@@ -39,11 +39,27 @@ const AuthModal = ({route, navigation}) => {
 
   const signUp = () => {
     axios.post(employeeSignup, {user}).then(res => {
-      navigation.navigate('otpVerification', {
-        user: {
-          email: user.email,
-        },
-      });
+      console.log(res.data,"------asas",res)
+      if(res.status == 200){
+        navigation.navigate('otpVerification', {
+          user: {
+            ...user,
+            user_id: res.data.user_id
+          },
+        });
+      }else if(res.status == 202) {
+        console.log("--as-da-sd-a-sd-as-d-as-d--", res.data)
+        const data = {
+          user: user,
+          message: 'Please ask shop owner to verify and then login.'
+        }
+        navigation.navigate('notApproved',data)
+      }else{
+        dispMessage('danger','Error',res.data)
+      }
+
+    }).catch((err)=>{
+      dispMessage('danger','Error',res.data)
     });
   };
 
@@ -58,9 +74,9 @@ const AuthModal = ({route, navigation}) => {
     const {name, email, password, confirmPassword, phone, dob, shop_id} = user;
     if (authType == 'logIn') {
       if (!(email && password)) {
-        setError('All fields are required');
+        dispMessage('danger', 'Error', 'All fields are required');
       } else {
-        setError('');
+        // handle login here
       }
     } else {
       if (
@@ -74,12 +90,9 @@ const AuthModal = ({route, navigation}) => {
           shop_id
         )
       ) {
-        setError('All fields are required');
         dispMessage('danger', 'Error', 'All fields are required');
       } else if (!/^([0-9]{10})$/.test(phone)) {
         dispMessage('danger', 'Error', 'Phone number is invalid');
-
-        setError('Phone number is invalid');
       } else if (
         !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z](?=.*\W).{8,16})/.test(password)
       ) {
@@ -88,16 +101,10 @@ const AuthModal = ({route, navigation}) => {
           'Error',
           'Password should have special charachter, lower, upper, numeric charchters and length should be > 8',
         );
-        setError(
-          'Password should have special charachter, lower, upper, numeric charchters and length should be > 8',
-        );
       } else if (password != confirmPassword) {
         dispMessage('danger', 'Error', "passwords don't match");
-        setError("passwords don't match");
       } else {
-        setError('');
         signUp();
-        console.log('---all errors cleared----');
       }
     }
   };
@@ -106,7 +113,6 @@ const AuthModal = ({route, navigation}) => {
       console.log('---res----', res.data);
       setShops(res.data);
     }, []);
-    // fetch("http://localhost:3000/api/v1/shops").then(res => res.json()).then((data)=>console.log("---data---",data)).catch(err => console.log(err))
     const backHandle = BackHandler.addEventListener('hardwareBackPress', () => {
       return false;
     });
@@ -115,7 +121,6 @@ const AuthModal = ({route, navigation}) => {
   }, []);
   return (
     <PortalChoiceBackground>
-      {console.log("---user.db",user.dob, typeof user.dob)}
       <View>
         {authType == 'signUp' && (
           <View style={styles.inputContainer}>

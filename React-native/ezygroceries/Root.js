@@ -20,6 +20,7 @@ import Profile from './src/components/screens/profilescreen';
 import Stat from './src/components/screens/statscreen';
 import Employee from './src/components/screens/employeescreen';
 import Order from './src/components/screens/detailscreen';
+import NotApproved from './src/components/Autorization/notApproved';
 
 const Stack = createNativeStackNavigator();
 const TabStack = createBottomTabNavigator();
@@ -45,7 +46,7 @@ const CustomDrawerContent = props => {
       <DrawerItem
         activeTintColor={primaryColor}
         label={'Help'}
-        icon={({color,focused,size}) => {
+        icon={({color, focused, size}) => {
           return (
             <MaterialCommunityIcons
               name={'help-circle'}
@@ -82,7 +83,7 @@ const BottomTabStack = () => {
           backgroundColor: black,
           marginBottom: 9,
           marginHorizontal: 17,
-          marginTop:5,
+          marginTop: 5,
           borderRadius: 50,
           paddingBottom: 0,
         },
@@ -127,21 +128,20 @@ const HomeStack = () => {
   return (
     <Drawer.Navigator
       screenOptions={({route}) => ({
-        drawerActiveTintColor:primaryColor,
+        drawerActiveTintColor: primaryColor,
         headerShown: false,
         drawerIcon: ({focused, color, size}) => {
           let iconName = '';
           if (route.name == 'Tabs') {
-            iconName = 'home-group'
+            iconName = 'home-group';
           }
-            return (
-              <MaterialCommunityIcons
-                name={'home-group'}
-                size={size}
-                color={color}
-              />
-            );
-
+          return (
+            <MaterialCommunityIcons
+              name={'home-group'}
+              size={size}
+              color={color}
+            />
+          );
         },
       })}
       drawerContent={props => <CustomDrawerContent {...props} />}>
@@ -166,6 +166,9 @@ const LoginStack = () => {
       <Stack.Screen
         name={'otpVerification'}
         component={OtpVerification}></Stack.Screen>
+      <Stack.Screen
+        name={'notApproved'}
+        component={NotApproved}></Stack.Screen>
     </Stack.Navigator>
   );
 };
@@ -175,10 +178,9 @@ const Root = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          animation:'fade_from_bottom',
+          animation: 'fade_from_bottom',
           headerShown: false,
         }}
-
         initialRouteName="Login">
         <Stack.Screen component={LoginStack} name="Login" />
         <Stack.Screen component={HomeStack} name="HomeStack" />

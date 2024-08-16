@@ -21,6 +21,7 @@ const employeeModal = {
           if (err) {
             reject(err);
           } else {
+            console.log("------res-----",result)
             resolve(result);
           }
         }
@@ -58,6 +59,76 @@ const employeeModal = {
       );
     });
   },
+  saveotpSecret: (secret, user_id) => {
+    console.log("-------hello-------")
+    return new Promise((resolve, reject) => {
+      db.query('UPDATE employees SET otp = ? where id = ?',[secret, user_id], (err, result)=>{
+        if(err){
+          console.log("---err--",err)
+          reject(err);
+        }else{
+          console.log("---RESULT--",result)
+          resolve(result);
+        }
+      } )
+    })
+  },
+  getOtpSecret: (user_id) => {
+    return new Promise((resolve, reject) => {
+      db.query('select otp from  employees  where id = ?',[user_id], (err, result)=>{
+        if(err){
+          console.log("---err--",err)
+          reject(err);
+        }else{
+          console.log("---RESULT--",result)
+          resolve(result);
+        }
+      } )
+    })
+  },
+  saveAuthtoken: (authToken, user_id) => {
+    console.log("-------hello-------")
+    return new Promise((resolve, reject) => {
+      db.query('UPDATE employees SET auth_token = ? where id = ?',[authToken, user_id], (err, result)=>{
+        if(err){
+          console.log("---err--",err)
+          reject(err);
+        }else{
+          db.query('select * from  employees  where id = ?',[user_id],(err, result)=>{
+            console.log("---RESULT-66666666-",result)
+            resolve(result);
+          })
+
+        }
+      } )
+    })
+  },
+  getEmployeeData: (user_id) => {
+    return new Promise((resolve, reject) => {
+      db.query('select * from  employees  where id = ?',[user_id], (err, result)=>{
+        if(err){
+          console.log("---err--",err)
+          reject(err);
+        }else{
+          console.log("---RESULT--",result)
+          resolve(result);
+        }
+      } )
+    })
+  },
+  getEmployeeWithEmail : (email) => {
+    return new Promise((resolve, reject) => {
+      db.query('select * from  employees  where email = ?',[email], (err, result)=>{
+        if(err){
+          console.log("---err--",err)
+          reject(err);
+        }else{
+          resolve(result);
+        }
+      } )
+    })
+  }
+
 };
 
 export default employeeModal;

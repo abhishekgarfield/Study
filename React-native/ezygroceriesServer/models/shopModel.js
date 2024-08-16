@@ -12,6 +12,18 @@ const shopModal = {
       });
     });
   },
+  getShopWithId:  (shop_id) => {
+    return new Promise((resolve, reject) => {
+      db.query("SELECT * from shops where id = ?;", [shop_id], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
 };
 
 export default shopModal;

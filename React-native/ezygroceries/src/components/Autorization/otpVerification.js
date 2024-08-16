@@ -16,20 +16,63 @@ import CountDown from 'react-native-countdown-component';
 import {Title, text} from '../../assets/fonts';
 import {black, linkColor} from '../Common/colors';
 import OtpVerify from 'react-native-otp-verify';
+import axios from 'axios';
+import { employeeResendOtp, employeeVerifyOtp } from '../../apis/api';
 
 const OtpVerification = ({navigation, route}) => {
   let otpInput = useRef(null);
   let resendCounter = useRef(10);
   const [isResend, setIsResend] = useState(false);
- const testRef= useRef(null)
-  const {user} = route.params;
+  const {user:{email, user_id,name}} = route.params;
 
   const reSendOtp = () => {
-    otpInput.current?.setValue('123456');
-    dispMessage('success', 'Success', 'Otp has been sent successfully.');
     setIsResend(false);
-    resendCounter.current += 30;
+        resendCounter.current += 30;
+    const data = {
+      user_id: user_id,
+      email: email,
+      name: name
+    }
+    axios.post(employeeResendOtp,{
+      data
+    }).then((res)=>{
+      if(res.status == 200){
+        otpInput.current?.setValue('');
+        dispMessage('success', 'Success', 'Otp has been resent successfully.');
+      }else if (res.status == 202){
+
+      }
+    }).catch((err)=>{
+      dispMessage('danger', 'Error', 'server erro')
+    })
+
+
   };
+
+  const verifyOtp = (text) =>{
+    const data = {
+      'otp': text,
+      'user_id': user_id,
+      email: email,
+      name: name
+    }
+    dispMessage('Info', 'Info', 'Verifyig your otp.');
+    axios.post(employeeVerifyOtp,{data}).then((res)=>{
+      if(res.status == 200){
+        if(res.data.user.is_approved){
+          console.log("---helo---")
+          navigation.navigate('HomeStack',{
+            user:res.data.user
+          })
+        }
+      }else if(res.status == 202){
+        dispMessage('danger','Error',res.data)
+      }
+    }).catch((err)=>{
+      console.log("---asd-asd-a-s-",err)
+    })
+  }
+
   useEffect(() => {
     dispMessage('success', 'Success', 'Otp has been sent successfully.');
     if(Platform.OS == 'android')
@@ -61,7 +104,7 @@ const OtpVerification = ({navigation, route}) => {
         <Text style={styles.varificationMessage}>
           We have sent you a 4-digit OTP on
         </Text>
-        <Text style={styles.varificationMessage}>{user.email}</Text>
+        <Text style={styles.varificationMessage}>{email}</Text>
       </View>
       <TextInput autoFocus={true} autoComplete="sms-otp"
       onKeyPress={(e)=>{
@@ -94,16 +137,10 @@ const OtpVerification = ({navigation, route}) => {
           flexWrap: 'wrap',
         }}
         keyboardType="numeric"
-        onTextChange = {(e)=>{
-          console.log("-----e---e----",e)
-        }}
+
         handleTextChange={text => {
           if (text.length == 6) {
-            if (text == '111111') {
-              dispMessage('success', 'Success', 'Otp verified successfully');
-            } else {
-              dispMessage('danger', 'Error', 'Otp does not match.');
-            }
+            verifyOtp(text);
           }
         }}
       />
