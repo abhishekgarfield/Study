@@ -2,13 +2,16 @@ import { StatusBar } from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export const dispMessage = (type, message, description) => {
+export const dispMessage = (type, message, description, onhide = () => {}) => {
   showMessage({
     message: message,
     type: type,
     animated: true,
     description: description,
     animationDuration: 500,
+    onHide:()=>{
+      onhide();
+    },
     icon: {
       icon: () => {
         return type == 'success' ? (

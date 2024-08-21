@@ -21,7 +21,7 @@ const employeeModal = {
           if (err) {
             reject(err);
           } else {
-            console.log("------res-----",result)
+            console.log("------res---111--",result)
             resolve(result);
           }
         }

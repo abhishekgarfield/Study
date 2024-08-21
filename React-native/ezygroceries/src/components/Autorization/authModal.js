@@ -16,14 +16,11 @@ import {Title, text} from '../../assets/fonts';
 import {dispMessage} from '../Common/flashMessages';
 import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
-import {employeeSignup, getAllShops} from '../../apis/api';
+import {employeeLogin, employeeSignup, getAllShops} from '../../apis/api';
 
 const AuthModal = ({route, navigation}) => {
   const [authType, setAuthType] = useState('logIn');
   const {userType} = route.params;
-  console.log('---usertpe----', userType);
-  // let userType = 'shopper'
-  const [error, setError] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [showDate, setShowDate] = useState(false);
   const [shops, setShops] = useState([]);
@@ -37,32 +34,32 @@ const AuthModal = ({route, navigation}) => {
     dob: new Date().toISOString().split('T')[0],
   });
 
+  /** for signing up  */
   const signUp = () => {
-    axios.post(employeeSignup, {user}).then(res => {
-      console.log(res.data,"------asas",res)
-      if(res.status == 200){
-        navigation.navigate('otpVerification', {
-          user: {
-            ...user,
-            user_id: res.data.user_id
-          },
-        });
-      }else if(res.status == 202) {
-        console.log("--as-da-sd-a-sd-as-d-as-d--", res.data)
-        const data = {
-          user: user,
-          message: 'Please ask shop owner to verify and then login.'
+    axios
+      .post(employeeSignup, {user})
+      .then(res => {
+        if (res.status == 200) {
+          navigation.navigate('otpVerification', {
+            user: {
+              ...user,
+              user_id: res.data.user_id,
+            },
+          });
+        } else if (res.status == 202) {
+          dispMessage('success', 'Success', res.data, () => {
+            navigation.popToTop();
+          });
+        } else {
+          dispMessage('danger', 'Error', res.data);
         }
-        navigation.navigate('notApproved',data)
-      }else{
-        dispMessage('danger','Error',res.data)
-      }
-
-    }).catch((err)=>{
-      dispMessage('danger','Error',res.data)
-    });
+      })
+      .catch(err => {
+        dispMessage('danger', 'Error', res.data);
+      });
   };
 
+  /** For handling user input  */
   const handleInput = (name, value) => {
     if (name == 'dob') {
       setShowDate(!showDate);
@@ -70,6 +67,31 @@ const AuthModal = ({route, navigation}) => {
     setUser({...user, [name]: value});
   };
 
+  /** For handling login  */
+  const login = () => {
+    console.log("-----------111-------")
+    axios
+      .post(employeeLogin, {
+        user,
+      })
+      .then(res => {
+        console.log('---res.dat', res.data.shop_id);
+        if (res.status == 202) {
+          navigation.navigate('notApproved', res.data);
+        } else if (res.status == 200) {
+          navigation.navigate('otpVerification', {
+            user: {
+              ...user,
+              user_id: res.data.user_id,
+            },
+          });
+        } else {
+          dispMessage('danger', 'Error', res.data);
+        }
+      });
+  };
+
+  /** For validation user  */
   const validateUser = () => {
     const {name, email, password, confirmPassword, phone, dob, shop_id} = user;
     if (authType == 'logIn') {
@@ -77,6 +99,7 @@ const AuthModal = ({route, navigation}) => {
         dispMessage('danger', 'Error', 'All fields are required');
       } else {
         // handle login here
+        login();
       }
     } else {
       if (
@@ -108,6 +131,7 @@ const AuthModal = ({route, navigation}) => {
       }
     }
   };
+
   useEffect(() => {
     axios.get(getAllShops).then(res => {
       console.log('---res----', res.data);
@@ -116,9 +140,9 @@ const AuthModal = ({route, navigation}) => {
     const backHandle = BackHandler.addEventListener('hardwareBackPress', () => {
       return false;
     });
-
     return () => backHandle.remove();
   }, []);
+
   return (
     <PortalChoiceBackground>
       <View>
@@ -242,8 +266,7 @@ const AuthModal = ({route, navigation}) => {
               <Text onPress={() => setShowDate(true)} style={styles.inputField}>
                 {user.dob ? user.dob : 'DOB'}
               </Text>
-              {
-              showDate && (
+              {showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
                   value={new Date(user.dob)}
@@ -252,8 +275,14 @@ const AuthModal = ({route, navigation}) => {
                   textColor="white"
                   themeVariant="dark"
                   onChange={(event, selectedDate) => {
-                    handleInput('dob', new Date(selectedDate).toISOString().split('T')[0]);
-                    console.log('----text-----', new Date(selectedDate).toISOString().split('T')[0]);
+                    handleInput(
+                      'dob',
+                      new Date(selectedDate).toISOString().split('T')[0],
+                    );
+                    console.log(
+                      '----text-----',
+                      new Date(selectedDate).toISOString().split('T')[0],
+                    );
                   }}
                 />
               )}
@@ -335,7 +364,6 @@ const AuthModal = ({route, navigation}) => {
               confirmPassword: '',
               dob: new Date().toISOString().split('T')[0],
             });
-            setError('');
             setAuthType(authType == 'logIn' ? 'signUp' : 'logIn');
           }}>
           <Text

@@ -13,38 +13,42 @@ import authorizationStyles from '../../styles/authorizationStyles';
 import Icon from 'react-native-vector-icons/Entypo';
 import {hideMessage, showMessage} from 'react-native-flash-message';
 import {errorColor, red} from '../Common/colors';
+import schema from '../../helpers/schema';
+import { deleteTable } from '../../config/sqlite';
+import createAllTables from '../../helpers/createTables';
 
 const PortalChoice = ({navigation}) => {
   React.useEffect(() => {
-    // const exitApp = BackHandler.addEventListener('hardwareBackPress', () => {
-    //   showMessage({
-    //     animated: true,
-    //     autoHide: false,
-    //     message: 'Are you sure you want to exit?',
-    //     title: 'Exit app',
-    //     type: 'info',
-    //     renderAfterContent: () => {
-    //       return (
-    //         <View style={portalChoiceStyles.alertContainer}>
-    //           <View style={{ marginRight: 3}}>
-    //             <Button title="exit" color={red} onPress={()=>{
-    //               BackHandler.exitApp();
-    //             }}/>
-    //           </View>
-    //           <View style={{ marginLeft: 3}}>
-    //           <Button title="cancel" onPress={()=>{
-    //             hideMessage()
-    //             console.log("-----canceled-====")
-    //           }}/>
-    //           </View>
-    //         </View>
-    //       );
-    //     },
-    //   });
-    //   return true;
-    // });
+    createAllTables()
+    const exitApp = BackHandler.addEventListener('hardwareBackPress', () => {
+      showMessage({
+        animated: true,
+        autoHide: false,
+        message: 'Are you sure you want to exit?',
+        title: 'Exit app',
+        type: 'info',
+        renderAfterContent: () => {
+          return (
+            <View style={portalChoiceStyles.alertContainer}>
+              <View style={{ marginRight: 3}}>
+                <Button title="exit" color={red} onPress={()=>{
+                  BackHandler.exitApp();
+                }}/>
+              </View>
+              <View style={{ marginLeft: 3}}>
+              <Button title="cancel" onPress={()=>{
+                hideMessage()
+                console.log("-----canceled-====")
+              }}/>
+              </View>
+            </View>
+          );
+        },
+      });
+      return true;
+    });
 
-    // return () => exitApp.remove();
+    return () => exitApp.remove();
   }, []);
   return (
     <PortalChoiceBackground>

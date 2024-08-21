@@ -3,10 +3,10 @@ dotenv.config();
 
 const baseController = {
   generatemailText: function (options = {}) {
-    const { otp, name } = options;
+    const { otp, first_name } = options;
 
     const emailBody = `
-    Hello ${name},
+    Hello ${first_name},
 
     Thank you for signing up with ${"ezygroceries"}! To complete your registration, please use the following One-Time Password (OTP) code:
 
