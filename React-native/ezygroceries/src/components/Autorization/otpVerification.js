@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import PortalChoiceBackground from './portalChoiceBackground';
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {dispMessage} from '../Common/flashMessages';
 import CountDown from 'react-native-countdown-component';
 import {Title, text} from '../../assets/fonts';
@@ -20,13 +20,15 @@ import axios from 'axios';
 import {employeeResendOtp, employeeVerifyOtp} from '../../apis/api';
 import {insertRecord} from '../../config/sqlite';
 import tables from '../../helpers/tables';
+import { DataContext } from '../../../store';
 
 const OtpVerification = ({navigation, route}) => {
+  const dataContext = useContext(DataContext)
   let otpInput = useRef(null);
   let resendCounter = useRef(10);
   const [isResend, setIsResend] = useState(false);
   const {
-    user: {email, user_id, name},
+    user: {email, user_id, name, userType}
   } = route.params;
 
   const reSendOtp = () => {
@@ -64,18 +66,18 @@ const OtpVerification = ({navigation, route}) => {
       email: email,
       name: name,
     };
-    dispMessage('Info', 'Info', 'Verifyig your otp.');
     axios
       .post(employeeVerifyOtp, {data})
       .then(res => {
         if (res.status == 200) {
-          const {first_name, email, role_id, shop_id, is_approved, id} =
+          const {first_name, email, role_id, shop_id, is_approved, id, auth_token} =
             res.data.user;
-          if (is_approved) {
+          if (is_approved || userType != 'shopper') {
+            dataContext.setCurrentUser({first_name, email, role_id, shop_id, is_approved, id, is_employee: userType == 'shopper' ? 1 : 0, auth_token })
             insertRecord(
-              tables.EmployeeTable,
-              'first_name, id, email, role_id, shop_id',
-              [first_name, id, email, role_id, shop_id],
+              tables.UserTable,
+              'first_name, id, email, role_id, shop_id, is_employee, auth_token ',
+              [first_name, id, email, role_id, shop_id, userType == 'shopper', auth_token],
             )
               .then(res => {
                 navigation.navigate('HomeStack', {
@@ -127,17 +129,6 @@ const OtpVerification = ({navigation, route}) => {
         </Text>
         <Text style={styles.varificationMessage}>{email}</Text>
       </View>
-      <TextInput
-        autoFocus={true}
-        autoComplete="sms-otp"
-        onKeyPress={e => {
-          console.log('----e----', e);
-        }}
-        textContentType="oneTimeCode"
-        onChangeText={text => {
-          console.log('---text=---wwww-', text);
-        }}
-      />
       <OTPTextInput
         autoComplete="sms-otp"
         textContentType="oneTimeCode"
@@ -164,6 +155,7 @@ const OtpVerification = ({navigation, route}) => {
         keyboardType="numeric"
         handleTextChange={text => {
           if (text.length == 6) {
+            dispMessage('Info', 'Info', 'Verifyig your otp.');
             verifyOtp(text);
           }
         }}

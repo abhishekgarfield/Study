@@ -11,16 +11,19 @@ import PortalChoiceBackground from './portalChoiceBackground';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import {useEffect, useState} from 'react';
-import {linkColor, primaryColor, white} from '../Common/colors';
+import {linkColor, primaryColor, secondaryColor, white} from '../Common/colors';
 import {Title, text} from '../../assets/fonts';
 import {dispMessage} from '../Common/flashMessages';
 import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
 import {employeeLogin, employeeSignup, getAllShops} from '../../apis/api';
+import LoaderKit from 'react-native-loader-kit';
 
 const AuthModal = ({route, navigation}) => {
   const [authType, setAuthType] = useState('logIn');
+  const [disableAuthButtons, setdisableAuthButtons] = useState(false);
   const {userType} = route.params;
+  console.log("---as-d-as-d-asd-a-sd-",userType)
   const [hidePassword, setHidePassword] = useState(true);
   const [showDate, setShowDate] = useState(false);
   const [shops, setShops] = useState([]);
@@ -36,9 +39,11 @@ const AuthModal = ({route, navigation}) => {
 
   /** for signing up  */
   const signUp = () => {
+    setdisableAuthButtons(true);
     axios
       .post(employeeSignup, {user})
       .then(res => {
+        setdisableAuthButtons(false);
         if (res.status == 200) {
           navigation.navigate('otpVerification', {
             user: {
@@ -55,6 +60,7 @@ const AuthModal = ({route, navigation}) => {
         }
       })
       .catch(err => {
+        setdisableAuthButtons(false);
         dispMessage('danger', 'Error', res.data);
       });
   };
@@ -69,13 +75,13 @@ const AuthModal = ({route, navigation}) => {
 
   /** For handling login  */
   const login = () => {
-    console.log("-----------111-------")
+    setdisableAuthButtons(true);
     axios
       .post(employeeLogin, {
         user,
       })
       .then(res => {
-        console.log('---res.dat', res.data.shop_id);
+        setdisableAuthButtons(false);
         if (res.status == 202) {
           navigation.navigate('notApproved', res.data);
         } else if (res.status == 200) {
@@ -83,11 +89,16 @@ const AuthModal = ({route, navigation}) => {
             user: {
               ...user,
               user_id: res.data.user_id,
+              userType: userType,
             },
           });
         } else {
           dispMessage('danger', 'Error', res.data);
         }
+      })
+      .catch(err => {
+        setdisableAuthButtons(false);
+        console.log('0----errr---', err);
       });
   };
 
@@ -289,34 +300,15 @@ const AuthModal = ({route, navigation}) => {
             </View>
           </View>
         )}
-        {/* {error && (
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              flexDirection: 'row',
-              marginBottom: 8,
-            }}>
-            <Icon2 name="error" size={25} color={errorColor} />
-            <Text
-              style={{
-                color: 'red',
-                fontWeight: '500',
-                padding: 5,
-                fontFamily:text
-              }}>
-              {error}
-            </Text>
-          </View>
-        )} */}
         <TouchableOpacity
+          disabled={disableAuthButtons}
           onPress={() => {
             validateUser();
           }}
           style={{
             display: 'flex',
             flexDirection: 'row',
-            backgroundColor: primaryColor,
+            backgroundColor: disableAuthButtons ? '#66c96f' : primaryColor,
             paddingVertical: 13,
             borderWidth: 0,
             alignItems: 'center',
@@ -342,6 +334,13 @@ const AuthModal = ({route, navigation}) => {
             }}>
             {authType == 'logIn' ? 'Sign In' : 'Sign Up'}
           </Text>
+          {disableAuthButtons && (
+            <LoaderKit
+              style={{width: 25, height: 25,marginLeft:10}}
+              name={'BallPulse'}
+              color={white}
+            />
+          )}
         </TouchableOpacity>
         <TouchableOpacity
           style={{

@@ -1,3 +1,3 @@
-const EmployeeTable = `employees`;
+const UserTable = `employees`;
 
-export default {EmployeeTable}
+export default {UserTable}

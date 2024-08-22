@@ -4,10 +4,6 @@ import db from './database';
 export const createTable = (tableName, fields) => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => {
-      console.log(
-        '---------',
-        `CREATE TABLE IF NOT EXISTS ${tableName} (${fields});`,
-      );
       txn.executeSql(
         `CREATE TABLE IF NOT EXISTS ${tableName} (${fields});`,
         [],
@@ -65,7 +61,7 @@ export const deleteTable = tableName => {
   return new Promise((resolve, reject) => {
     db.transaction(txn => [
       txn.executeSql(
-        `DROP TABLE IF EXISTS ${tableName};`,
+        `DROP TABLE IF EXISTS ${tableName};`,[],
         (tx, result) => {
           console.log('---result-delete--', result);
           resolve(result);
@@ -110,35 +106,41 @@ export const selectRecord = (
   table,
   fields = '*',
   whereAttribute = null,
-  values,
+  values = [],
 ) => {
   return new Promise((resolve, reject) => {
-    if (whereAttribute) {
-      db.transaction(
-        `SELECT ${fields} FROM ${table} WHERE ${whereAttribute}`,
-        values,
-        (tx, result) => {
-          console.log('-----result select where ----', result.rows);
-          resolve(result.rows);
-        },
-        err => {
-          console.log('-----select where error -----', err);
-          reject(err);
-        },
-      );
-    } else {
-      db.transaction(
-        `SELECT ${fields} FROM ${table}`,
-        [],
-        (tx, result) => {
-          console.log('-----result select  ----', result.rows);
-          resolve(result.rows);
-        },
-        err => {
-          console.log('-----select  error -----', err);
-          reject(err);
-        },
-      );
+    try {
+      if (whereAttribute) {
+        db.transaction(txn => {
+          txn.executeSql(
+            `SELECT ${fields} FROM ${table} WHERE ${whereAttribute};`,
+            values,
+            (tx, result) => {
+              console.log('-----result select where ----', result.rows);
+              resolve(result.rows);
+            },
+            error => {
+              console.log('-----select where error -----', error);
+              reject(error);
+            },
+          );
+        });
+      } else {
+        db.transaction(txn => {
+          txn.executeSql(
+            `SELECT ${fields} FROM ${table};`, [],
+            (tx, result) => {
+              resolve(result.rows);
+            },
+            error => {
+              console.log('-----select  error -----', error);
+              reject(error);
+            },
+          );
+        });
+      }
+    } catch (err) {
+      console.log('---err--222', err);
     }
   });
 };
@@ -152,7 +154,7 @@ export const updateRecord = (table, fields, whereAttribute = null, values) => {
         txn.executeSql(
           `UPDATE ${table} SET ${fieldSeparator(
             fields,
-          )} WHERE ${whereAttribute}`,
+          )} WHERE ${whereAttribute};`,
           values,
           (tx, result) => {
             resolve(result);
@@ -223,6 +225,5 @@ const fieldSeparator = fields => {
 const setValue = length => {
   let valueAttribute = '?,';
   valueAttribute = valueAttribute.repeat(length - 1) + '?';
-  console.log('---------ssas--------', valueAttribute);
   return valueAttribute;
 };

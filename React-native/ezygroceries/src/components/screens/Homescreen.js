@@ -21,11 +21,14 @@ import {
 } from '../../assets/fonts';
 import MainHeader from '../Common/headers';
 import {quoteColor} from '../Common/colors';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import { selectRecord } from '../../config/sqlite';
+import schema from '../../helpers/schema';
+import tables from '../../helpers/tables';
 
 const Home = ({navigation}) => {
   const quoteAnimation = useRef(new Animated.Value(0)).current;
-
+  // const [user, setUser] = useState({})
 
   const user = {
     image: require('../../assets/images/sampDp2.jpg'),
@@ -50,6 +53,9 @@ const onFocus = () =>{
     })
 }
   useEffect(() => {
+    selectRecord(tables.UserTable, '*').then((res)=>{
+      console.log("----result---",result)
+    })
     const unsubscribeNavigation = navigation.addListener('focus',onFocus)
     return unsubscribeNavigation
   },[]);

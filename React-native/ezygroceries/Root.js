@@ -21,18 +21,25 @@ import Stat from './src/components/screens/statscreen';
 import Employee from './src/components/screens/employeescreen';
 import Order from './src/components/screens/detailscreen';
 import NotApproved from './src/components/Autorization/notApproved';
+import {useContext, useLayoutEffect} from 'react';
+import {DataContext} from './store';
+import {deleteTable, selectRecord} from './src/config/sqlite';
+import tables from './src/helpers/tables';
+import SplashScreen from 'react-native-splash-screen';
+import { logOut } from './src/components/Autorization/common';
 
 const Stack = createNativeStackNavigator();
 const TabStack = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
 const CustomDrawerContent = props => {
+  const dataContext = useContext(DataContext)
   return (
     <DrawerContentScrollView {...props}>
       <View style={drawerStyles.header}>
         <View style={drawerStyles.profileCircle}>
           {false ? (
-            <Text style={drawerStyles.profileText}>F</Text>
+            <Text style={drawerStyles.profileText}>f</Text>
           ) : (
             <Image
               style={drawerStyles.profilePhoto}
@@ -40,7 +47,7 @@ const CustomDrawerContent = props => {
             />
           )}
         </View>
-        <Text style={drawerStyles.text}>Faith Gaiciumia</Text>
+        <Text style={drawerStyles.text}>{dataContext.currentUser.first_name}</Text>
       </View>
       <DrawerItemList {...props} />
       <DrawerItem
@@ -57,9 +64,29 @@ const CustomDrawerContent = props => {
         }}
         onPress={() => Linking.openURL('www.google.com')}
       />
+      <DrawerItem
+        activeTintColor={primaryColor}
+        label={'Log out'}
+        icon={({color, focused, size}) => {
+          return (
+            <MaterialCommunityIcons
+              name={'logout'}
+              size={size}
+              color={color}
+            />
+          );
+        }}
+        onPress={() => {
+          deleteTable(tables.UserTable).then((res)=>{
+              dataContext.setCurrentUser({});
+
+          })
+        }}
+      />
     </DrawerContentScrollView>
   );
 };
+
 
 const TabBarIcon = ({focused, iconName, color, size}) => {
   return (
@@ -166,14 +193,21 @@ const LoginStack = () => {
       <Stack.Screen
         name={'otpVerification'}
         component={OtpVerification}></Stack.Screen>
-      <Stack.Screen
-        name={'notApproved'}
-        component={NotApproved}></Stack.Screen>
+      <Stack.Screen name={'notApproved'} component={NotApproved}></Stack.Screen>
     </Stack.Navigator>
   );
 };
 
 const Root = () => {
+  const dataContext = useContext(DataContext);
+    useLayoutEffect(()=>{
+    selectRecord(tables.UserTable, '*')
+      .then(res => {
+        dataContext.setCurrentUser(res.item(0));
+        SplashScreen.hide()
+      })
+      .catch(err => console.log('----err---', err));
+    },[])
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -182,8 +216,11 @@ const Root = () => {
           headerShown: false,
         }}
         initialRouteName="Login">
-        <Stack.Screen component={LoginStack} name="Login" />
-        <Stack.Screen component={HomeStack} name="HomeStack" />
+        {!dataContext.currentUser?.auth_token? (
+          <Stack.Screen component={LoginStack} name="Login" />
+        ) : (
+          <Stack.Screen component={HomeStack} name="HomeStack" dataContext />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

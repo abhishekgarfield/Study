@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   BackHandler,
-  Alert,
   Button,
   View,
   StyleSheet,
@@ -12,9 +11,7 @@ import PortalChoiceBackground from './portalChoiceBackground';
 import authorizationStyles from '../../styles/authorizationStyles';
 import Icon from 'react-native-vector-icons/Entypo';
 import {hideMessage, showMessage} from 'react-native-flash-message';
-import {errorColor, red} from '../Common/colors';
-import schema from '../../helpers/schema';
-import { deleteTable } from '../../config/sqlite';
+import {red} from '../Common/colors';
 import createAllTables from '../../helpers/createTables';
 
 const PortalChoice = ({navigation}) => {
