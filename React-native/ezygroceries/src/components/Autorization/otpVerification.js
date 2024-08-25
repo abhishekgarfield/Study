@@ -17,10 +17,10 @@ import {Title, text} from '../../assets/fonts';
 import {black, linkColor} from '../Common/colors';
 import OtpVerify from 'react-native-otp-verify';
 import axios from 'axios';
-import {employeeResendOtp, employeeVerifyOtp} from '../../apis/api';
+import {customerResendOtp, customerVerifyOtp, employeeResendOtp, employeeVerifyOtp, setHeader} from '../../apis/api';
 import {insertRecord} from '../../config/sqlite';
 import tables from '../../helpers/tables';
-import { DataContext } from '../../../store';
+import { DataContext, setContextInstance } from '../../../store';
 
 const OtpVerification = ({navigation, route}) => {
   const dataContext = useContext(DataContext)
@@ -40,7 +40,7 @@ const OtpVerification = ({navigation, route}) => {
       name: name,
     };
     axios
-      .post(employeeResendOtp, {
+      .post(userType == "shopper" ? employeeResendOtp : customerResendOtp, {
         data,
       })
       .then(res => {
@@ -67,22 +67,28 @@ const OtpVerification = ({navigation, route}) => {
       name: name,
     };
     axios
-      .post(employeeVerifyOtp, {data})
+      .post( userType== "shopper" ? employeeVerifyOtp : customerVerifyOtp, {data})
       .then(res => {
         if (res.status == 200) {
+          console.log("-as-d-as-da-sd-a-sd-as-d-as-d-------")
           const {first_name, email, role_id, shop_id, is_approved, id, auth_token} =
             res.data.user;
+            console.log("-as-d-as-da-sd-a-sd-as-d-as-d-------",is_approved,"----",userType)
+
           if (is_approved || userType != 'shopper') {
-            dataContext.setCurrentUser({first_name, email, role_id, shop_id, is_approved, id, is_employee: userType == 'shopper' ? 1 : 0, auth_token })
+            console.log("-----a-sd-a-s-d-a---hllooo----")
             insertRecord(
               tables.UserTable,
               'first_name, id, email, role_id, shop_id, is_employee, auth_token ',
               [first_name, id, email, role_id, shop_id, userType == 'shopper', auth_token],
-            )
-              .then(res => {
-                navigation.navigate('HomeStack', {
-                  user: res.data.user,
-                });
+            ).then(res => {
+                console.log("----heloo 0000001111110000000----");
+                dataContext.setCurrentUser({first_name, email, role_id, shop_id, is_approved, id, is_employee: userType == 'shopper' ? 1 : 0, auth_token })
+
+                setHeader(auth_token);
+                // navigation.navigate('HomeStack', {
+                //   user: res.data.user,
+                // });
               })
               .catch(err => {
                 console.log('---error while saving employee data--', err);
@@ -125,7 +131,7 @@ const OtpVerification = ({navigation, route}) => {
       <View style={styles.verificationContainer}>
         <Text style={styles.verificationTitle}>Enter Verification Code</Text>
         <Text style={styles.varificationMessage}>
-          We have sent you a 4-digit OTP on
+          We have sent you a 6-digit OTP on
         </Text>
         <Text style={styles.varificationMessage}>{email}</Text>
       </View>

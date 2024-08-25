@@ -10,6 +10,12 @@ const AppDataStore = ({children}) => {
 
 };
 
+export let contextInstance = null;
+
+export function setContextInstance(instance) {
+  contextInstance = instance;
+}
+
 
 
 export default AppDataStore;

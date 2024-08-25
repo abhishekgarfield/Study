@@ -21,15 +21,15 @@ import {
 } from '../../assets/fonts';
 import MainHeader from '../Common/headers';
 import {quoteColor} from '../Common/colors';
-import {useEffect, useRef, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import { selectRecord } from '../../config/sqlite';
 import schema from '../../helpers/schema';
 import tables from '../../helpers/tables';
+import { DataContext, setContextInstance } from '../../../store';
 
 const Home = ({navigation}) => {
   const quoteAnimation = useRef(new Animated.Value(0)).current;
-  // const [user, setUser] = useState({})
-
+  const dataContext = useContext(DataContext)
   const user = {
     image: require('../../assets/images/sampDp2.jpg'),
     first_name: 'Abhishek',
@@ -39,7 +39,6 @@ const Home = ({navigation}) => {
 
 
 const onFocus = () =>{
-    console.log("ASDASDASD-------",quoteAnimation.current)
     quoteAnimation.setValue(0)
     Animated.spring(quoteAnimation,{
         useNativeDriver:true,
@@ -47,18 +46,16 @@ const onFocus = () =>{
         delay:100
     }).start(({finished})=>{
         if(finished){
-            console.log("---fisnis",finished,quoteAnimation.current)
 
         }
     })
 }
   useEffect(() => {
-    selectRecord(tables.UserTable, '*').then((res)=>{
-      console.log("----result---",result)
-    })
+    setContextInstance(dataContext)
     const unsubscribeNavigation = navigation.addListener('focus',onFocus)
     return unsubscribeNavigation
   },[]);
+
   return (
     <SafeAreaView style={{display: 'flex', flex: 1}} >
       <MainHeader />

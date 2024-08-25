@@ -87,7 +87,7 @@ export const insertRecord = (tableName, fields, values) => {
           values,
           (tx, result) => {
             console.log('--- result--insert--', result);
-            resolve(res);
+            resolve(result);
           },
           err => {
             console.log('---err insert-', err);

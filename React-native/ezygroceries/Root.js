@@ -17,7 +17,6 @@ import rootStyles, {drawerStyles} from './src/styles/rootStyles';
 import {MaterialCommunityIcons} from './src/assets/icons';
 import {black, primaryColor} from './src/components/Common/colors';
 import Profile from './src/components/screens/profilescreen';
-import Stat from './src/components/screens/statscreen';
 import Employee from './src/components/screens/employeescreen';
 import Order from './src/components/screens/detailscreen';
 import NotApproved from './src/components/Autorization/notApproved';
@@ -26,7 +25,8 @@ import {DataContext} from './store';
 import {deleteTable, selectRecord} from './src/config/sqlite';
 import tables from './src/helpers/tables';
 import SplashScreen from 'react-native-splash-screen';
-import { logOut } from './src/components/Autorization/common';
+import ShopItems from './src/components/screens/shopitems';
+import { navigationRef } from './src/helpers/navigation';
 
 const Stack = createNativeStackNavigator();
 const TabStack = createBottomTabNavigator();
@@ -89,6 +89,7 @@ const CustomDrawerContent = props => {
 
 
 const TabBarIcon = ({focused, iconName, color, size}) => {
+
   return (
     <View style={rootStyles.iconContainer}>
       <View style={[rootStyles.circle, focused && rootStyles.focusedCircle]}>
@@ -99,8 +100,56 @@ const TabBarIcon = ({focused, iconName, color, size}) => {
 };
 
 const BottomTabStack = () => {
+  const dataContext = useContext(DataContext)
   return (
-    <TabStack.Navigator
+    dataContext.currentUser.is_employee ? <TabStack.Navigator
+    screenOptions={({route}) => ({
+      tabBarActiveTintColor: primaryColor,
+      tabBarInactiveTintColor: 'white',
+      headerShown: false,
+      tabBarStyle: {
+        height: 75,
+        backgroundColor: black,
+        marginBottom: 9,
+        marginHorizontal: 17,
+        marginTop: 5,
+        borderRadius: 50,
+        paddingBottom: 0,
+      },
+      tabBarShowLabel: false,
+      headerShown: false,
+      tabBarIcon: ({focused, color, size}) => {
+        let iconName = '';
+        if (route.name == 'Home') {
+          iconName = !focused
+            ? 'home-thermometer-outline'
+            : 'home-thermometer';
+        } else if (route.name == 'Profile') {
+          iconName = !focused ? 'account-edit-outline' : 'account-edit';
+        } else if (route.name == 'Orders') {
+          iconName = !focused ? 'basket-check-outline' : 'basket-check';
+        } else if (route.name == 'Employees') {
+          iconName = !focused ? 'account-group-outline' : 'account-group';
+        } else if (route.name == 'Shopitems') {
+          iconName = !focused ? 'chart-line' : 'chart-line-stacked';
+        }
+
+        return (
+          <TabBarIcon
+            focused={focused}
+            color={color}
+            size={size}
+            iconName={iconName}
+          />
+        );
+      },
+    })}>
+    <TabStack.Screen name="Home" component={Home} />
+    <TabStack.Screen name="Orders" component={Order} />
+    <TabStack.Screen name="Shopitems" component={ShopItems} />
+    <TabStack.Screen name="Employees" component={Employee} />
+    <TabStack.Screen name="Profile" component={Profile} />
+  </TabStack.Navigator> : <TabStack.Navigator
       screenOptions={({route}) => ({
         tabBarActiveTintColor: primaryColor,
         tabBarInactiveTintColor: 'white',
@@ -144,7 +193,7 @@ const BottomTabStack = () => {
       })}>
       <TabStack.Screen name="Home" component={Home} />
       <TabStack.Screen name="Orders" component={Order} />
-      <TabStack.Screen name="Stat" component={Stat} />
+      <TabStack.Screen name="Shopitems" component={ShopItems} />
       <TabStack.Screen name="Employees" component={Employee} />
       <TabStack.Screen name="Profile" component={Profile} />
     </TabStack.Navigator>
@@ -209,7 +258,7 @@ const Root = () => {
       .catch(err => console.log('----err---', err));
     },[])
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         screenOptions={{
           animation: 'fade_from_bottom',

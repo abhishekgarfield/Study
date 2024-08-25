@@ -9,8 +9,10 @@ import Fontisto from 'react-native-vector-icons/Fontisto'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
-export {FontAwesome, AntDesign, Entypo, EvilIcons, Feather, FontAwesome6, Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons}
+
+export {FontAwesome, AntDesign, Entypo, EvilIcons, Feather, FontAwesome6, Fontisto, Ionicons, MaterialCommunityIcons, MaterialIcons, SimpleLineIcons}
 
 
 

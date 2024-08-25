@@ -16,14 +16,14 @@ import {Title, text} from '../../assets/fonts';
 import {dispMessage} from '../Common/flashMessages';
 import RNPickerSelect from 'react-native-picker-select';
 import axios from 'axios';
-import {employeeLogin, employeeSignup, getAllShops} from '../../apis/api';
+import {customerLogin, customerSignup, employeeLogin, employeeSignup, getAllShops} from '../../apis/api';
 import LoaderKit from 'react-native-loader-kit';
 
 const AuthModal = ({route, navigation}) => {
   const [authType, setAuthType] = useState('logIn');
   const [disableAuthButtons, setdisableAuthButtons] = useState(false);
   const {userType} = route.params;
-  console.log("---as-d-as-d-asd-a-sd-",userType)
+  console.log('---as-d-as-d-asd-a-sd-', userType);
   const [hidePassword, setHidePassword] = useState(true);
   const [showDate, setShowDate] = useState(false);
   const [shops, setShops] = useState([]);
@@ -33,7 +33,7 @@ const AuthModal = ({route, navigation}) => {
     phone: '',
     password: '',
     confirmPassword: '',
-    shop_id: 'Select shop',
+    shop_id: '',
     dob: new Date().toISOString().split('T')[0],
   });
 
@@ -41,7 +41,7 @@ const AuthModal = ({route, navigation}) => {
   const signUp = () => {
     setdisableAuthButtons(true);
     axios
-      .post(employeeSignup, {user})
+      .post(userType == "shopper" ?  employeeSignup : customerSignup, {user})
       .then(res => {
         setdisableAuthButtons(false);
         if (res.status == 200) {
@@ -70,6 +70,9 @@ const AuthModal = ({route, navigation}) => {
     if (name == 'dob') {
       setShowDate(!showDate);
     }
+    if(name == 'shop_id' && (value == "null" || value==null)){
+      value = "";
+    }
     setUser({...user, [name]: value});
   };
 
@@ -77,7 +80,7 @@ const AuthModal = ({route, navigation}) => {
   const login = () => {
     setdisableAuthButtons(true);
     axios
-      .post(employeeLogin, {
+      .post(userType == "shopper" ?  employeeLogin : customerLogin, {
         user,
       })
       .then(res => {
@@ -113,6 +116,7 @@ const AuthModal = ({route, navigation}) => {
         login();
       }
     } else {
+      console.log("----------1---------",typeof shop_id, (shop_id || userType == 'customer') ? 1 : 2,"--A-SDASD",userType)
       if (
         !(
           name &&
@@ -121,7 +125,7 @@ const AuthModal = ({route, navigation}) => {
           confirmPassword &&
           phone &&
           dob &&
-          shop_id
+          (shop_id || userType == 'customer')
         )
       ) {
         dispMessage('danger', 'Error', 'All fields are required');
@@ -237,41 +241,44 @@ const AuthModal = ({route, navigation}) => {
                 }}
               />
             </View>
-            <View style={styles.inputContainer}>
-              <Icon name="shopping" size={30} color={'white'} />
-              <RNPickerSelect
-                style={{
-                  inputIOS: {
-                    paddingVertical: 12,
-                    color: 'white',
-                    paddingRight: 30,
-                    flexGrow: 1,
-                    borderColor: 'black',
-                    paddingHorizontal: 10,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: '500',
-                    fontFamily: text,
-                  },
-                  inputAndroid: {
-                    fontSize: 16,
-                    paddingHorizontal: 10,
-                    paddingVertical: 8,
-                    borderRadius: 8,
-                    paddingRight: 30,
-                    flexGrow: 1,
-                    borderColor: 'black',
-                    paddingHorizontal: 10,
-                    color: 'white',
-                    fontSize: 20,
-                    fontWeight: '500',
-                    fontFamily: text,
-                  },
-                }}
-                onValueChange={value => handleInput('shop_id', value)}
-                items={shops}
-              />
-            </View>
+            {userType == 'shopper' && (
+              <View style={styles.inputContainer}>
+                <Icon name="shopping" size={30} color={'white'} />
+                <RNPickerSelect
+                  style={{
+                    inputIOS: {
+                      paddingVertical: 12,
+                      color: 'white',
+                      paddingRight: 30,
+                      flexGrow: 1,
+                      borderColor: 'black',
+                      paddingHorizontal: 10,
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: '500',
+                      fontFamily: text,
+                    },
+                    inputAndroid: {
+                      fontSize: 16,
+                      paddingHorizontal: 10,
+                      paddingVertical: 8,
+                      borderRadius: 8,
+                      paddingRight: 30,
+                      flexGrow: 1,
+                      borderColor: 'black',
+                      paddingHorizontal: 10,
+                      color: 'white',
+                      fontSize: 20,
+                      fontWeight: '500',
+                      fontFamily: text,
+                    },
+                  }}
+                  onValueChange={value => handleInput('shop_id', value)}
+                  items={shops}
+                />
+              </View>
+            )}
+
             <View style={styles.inputContainer}>
               <Icon name="calendar" size={30} color={'white'} />
               <Text onPress={() => setShowDate(true)} style={styles.inputField}>
@@ -336,7 +343,7 @@ const AuthModal = ({route, navigation}) => {
           </Text>
           {disableAuthButtons && (
             <LoaderKit
-              style={{width: 25, height: 25,marginLeft:10}}
+              style={{width: 25, height: 25, marginLeft: 10}}
               name={'BallPulse'}
               color={white}
             />

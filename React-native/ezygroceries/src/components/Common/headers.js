@@ -6,23 +6,41 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
+  TextInput
 } from 'react-native';
-import {AntDesign, Ionicons} from '../../assets/icons';
+import {AntDesign, Ionicons, SimpleLineIcons} from '../../assets/icons';
 import {Title, smallTitles} from '../../assets/fonts';
 import {mainHeaderStyles} from '../../styles/mainHeaderStyles';
 import {TabRouter, useNavigation, useRoute} from '@react-navigation/native';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import { black } from './colors';
 
 const MainHeader = () => {
   const headerAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
-  const route = useRoute()
+  const route = useRoute();
   const user = {
     image: require('../../assets/images/sampDp2.jpg'),
     first_name: 'Abhishek',
     last_name: 'garfield',
     user_name: 'garfield1859',
   };
+  const searchAnimation = useRef(new Animated.Value(0)).current;
+  const [searchData, setSearchData] = useState({
+    is_active: false,
+    searcValue:'',
+  })
+  const startSearchAnim = () => {
+    let toValue = searchData.is_active ? 0 : 45
+    Animated.timing(searchAnimation,{
+      useNativeDriver:false,
+      toValue: toValue,
+      easing:Easing.bounce
+    }).start(({finished})=>{
+       setSearchData({...searchData,is_active: !searchData.is_active})
+    })
+  }
+
   const onFocus = () => {
     headerAnim.setValue(0);
     Animated.spring(headerAnim, {
@@ -37,8 +55,8 @@ const MainHeader = () => {
   }, []);
   return (
     <Animated.View
-      style={{
-        ...mainHeaderStyles.topView,
+      style={{paddingHorizontal: 17,
+        marginBottom:7,
         transform: [
           {
             scale: headerAnim.interpolate({
@@ -48,28 +66,63 @@ const MainHeader = () => {
           },
         ],
       }}>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          navigation.toggleDrawer();
-        }}>
-        <Image style={mainHeaderStyles.personDp} source={user.image} />
-      </TouchableWithoutFeedback>
-      <View style={mainHeaderStyles.headerTextContainer}>
-        <Text style={mainHeaderStyles.greetinText}>
-          Hello, {user.first_name}
-        </Text>
-        <Text style={mainHeaderStyles.dateText}>
-          Today {new Date().toDateString()}
-        </Text>
-      </View>
-      <View style={mainHeaderStyles.iconContainer}>
-        <View style={{paddingRight: 5}}>
-          <AntDesign name={'search1'} size={25} color={'black'} />
+      <View style={mainHeaderStyles.topView}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            navigation.toggleDrawer();
+          }}>
+          <Image style={mainHeaderStyles.personDp} source={user.image} />
+        </TouchableWithoutFeedback>
+        <View style={mainHeaderStyles.headerTextContainer}>
+          <Text style={mainHeaderStyles.greetinText}>
+            Hello, {user.first_name}
+          </Text>
+          <Text style={mainHeaderStyles.dateText}>
+            Today {new Date().toDateString()}
+          </Text>
         </View>
-        <View>
-          <Ionicons name={'notifications-outline'} size={25} color={'black'} />
+        <View style={mainHeaderStyles.iconContainer}>
+          <View style={{paddingRight: 5}}>
+          <TouchableOpacity style={{ paddingRight: 5 }} onPress={()=>{
+            startSearchAnim();
+          }}>
+            <SimpleLineIcons name={ searchData.is_active ? 'magnifier-remove' : 'magnifier'} size={25} color={'black'}/>
+          </TouchableOpacity>
+          </View>
+          <View>
+            <Ionicons
+              name={'notifications-outline'}
+              size={25}
+              color={'black'}
+            />
+          </View>
         </View>
       </View>
+      <Animated.View
+        style={[mainHeaderStyles.searchBarTopContainer,{height: searchAnimation}]}>
+        <View style={mainHeaderStyles.searchbarInnerContainer}>
+          <TextInput
+          value={searchData.searcValue}
+          onChangeText={(text)=>{
+            setSearchData({...searchData, searcValue: text});
+
+          }}
+            placeholder="Search items"
+            style={mainHeaderStyles.textInputStyles}
+            placeholderTextColor={'grey'}
+          />
+          <TouchableOpacity onPress={()=>{
+            setSearchData({...searchData, searcValue: ''});
+          }}>
+          <AntDesign
+            name={'closecircle'}
+            size={20}
+            color={'grey'}
+          />
+          </TouchableOpacity>
+
+        </View>
+      </Animated.View>
     </Animated.View>
   );
 };
