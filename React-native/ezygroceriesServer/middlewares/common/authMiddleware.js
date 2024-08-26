@@ -8,6 +8,10 @@ const skip_before_auth = (url) => {
     "/employees/verifyotp",
     "/employees/resendotp",
     "/shops/getshop",
+    "/customers/login",
+    "/customers/signup",
+    "/customers/verifyotp",
+    "/customers/resendotp",
   ];
   return skip_urls.includes(url);
 };
@@ -18,12 +22,13 @@ const authMiddleware = async (req, res, next) => {
       const authToken = req.header(process.env.JWT_HEADER_KEY);
       (await verifyToken(authToken))
         ? next()
-        : res.code(401).send("AUTHENTICATON FAILED.");
+        : res.status(401).send("AUTHENTICATON FAILED.");
     } else {
       next();
     }
   } catch (err) {
-    res.code(401).send("AUTHENTICATON FAILED.");
+
+    res.status(401).send("AUTHENTICATON FAILED.");
   }
 };
 

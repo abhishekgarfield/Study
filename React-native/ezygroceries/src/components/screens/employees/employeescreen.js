@@ -1,5 +1,5 @@
 import {SafeAreaView, Text, View} from 'react-native';
-import MainHeader from '../Common/headers';
+import MainHeader from '../../Common/headers';
 
 const Employee = () => {
   return (

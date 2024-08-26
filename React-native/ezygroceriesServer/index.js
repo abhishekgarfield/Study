@@ -5,6 +5,8 @@ import loggerMiddleware from './middlewares/common/loggerMiddleware.js';
 import authMiddleware from './middlewares/common/authMiddleware.js';
 import errorMiddleware from './middlewares/common/errorMiddleware.js';
 import { shopRoutes } from './routes/shopRoutes.js';
+import { customerRoutes } from './routes/customerRoutes.js';
+import { shopItemRoutes } from './routes/shopItemRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -26,6 +28,8 @@ app.use(express.urlencoded({ extended: true }));
 // routes
 app.use("/employees",employeeRoutes)
 app.use("/shops",shopRoutes)
+app.use("/customers",customerRoutes)
+app.use("/shopitems",shopItemRoutes)
 
 // error handing middleware
 app.use(errorMiddleware)

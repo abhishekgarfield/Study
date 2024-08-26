@@ -1,15 +1,15 @@
 import express from 'express';
-import employeeController from '../controllers/employeeController.js';
+import customerController from '../controllers/customerController.js';
 
 
 
 const router = express.Router();
 
-router.get('/getallcustomers',employeeController.allEmployees);
-router.post("/login", employeeController.employeeLogin)
-router.post("/signup", employeeController.employeeSignup)
-router.post("/verifyotp", employeeController.verifyOtp)
-router.post("/resendotp", employeeController.resendOtp)
+router.get('/getallcustomers',customerController.allcustomers);
+router.post("/login", customerController.customerLogin)
+router.post("/signup", customerController.customerSignup)
+router.post("/verifyotp", customerController.verifyOtp)
+router.post("/resendotp", customerController.resendOtp)
 
 
-export {router as employeeRoutes}
+export {router as customerRoutes}

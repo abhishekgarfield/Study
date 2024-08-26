@@ -106,6 +106,7 @@ const customerController = {
   verifyOtp: (req, res) => {
     try {
       const { otp, user_id } = req.body.data;
+      console.log("---------------333----------",otp, "-----",user_id)
       customerModal.getOtpSecret(user_id).then(async (result) => {
         const secret = result[0].otp;
         if (validateOtp(secret, otp)) {
@@ -151,4 +152,4 @@ const customerController = {
   },
 };
 
-export default employeeController;
+export default customerController;

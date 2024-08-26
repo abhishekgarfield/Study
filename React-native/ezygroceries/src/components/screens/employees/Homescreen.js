@@ -12,26 +12,26 @@ import {
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
-} from '../../assets/icons';
+} from '../../../assets/icons';
 import {
   Title,
   highlightSmallTitles,
   italicLight,
   smallTitles,
-} from '../../assets/fonts';
-import MainHeader from '../Common/headers';
-import {quoteColor} from '../Common/colors';
+} from '../../../assets/fonts';
+import MainHeader from '../../Common/headers';
+import {quoteColor} from '../../Common/colors';
 import {useContext, useEffect, useRef, useState} from 'react';
-import { selectRecord } from '../../config/sqlite';
-import schema from '../../helpers/schema';
-import tables from '../../helpers/tables';
-import { DataContext, setContextInstance } from '../../../store';
+import { selectRecord } from '../../../config/sqlite';
+import schema from '../../../helpers/schema';
+import tables from '../../../helpers/tables';
+import { DataContext, setContextInstance } from '../../../../store';
 
 const Home = ({navigation}) => {
   const quoteAnimation = useRef(new Animated.Value(0)).current;
   const dataContext = useContext(DataContext)
   const user = {
-    image: require('../../assets/images/sampDp2.jpg'),
+    image: require('../../../assets/images/sampDp2.jpg'),
     first_name: 'Abhishek',
     last_name: 'garfield',
     user_name: 'garfield1859',
@@ -110,7 +110,7 @@ const onFocus = () =>{
             </Text>
           </View>
           <Image
-            source={require('../../assets/images/pngegg.png')}
+            source={require('../../../assets/images/pngegg.png')}
             resizeMode="contain"
             style={{
               height: 180,

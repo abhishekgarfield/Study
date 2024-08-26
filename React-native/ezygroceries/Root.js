@@ -3,7 +3,7 @@ import AuthModal from './src/components/Autorization/authModal';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OtpVerification from './src/components/Autorization/otpVerification';
-import Home from './src/components/screens/Homescreen';
+import Home from './src/components/screens/employees/Homescreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
   DrawerContentScrollView,
@@ -11,21 +11,21 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import Test from './src/components/screens/testscreen';
+import Test from './src/components/screens/employees/testscreen';
 import {Image, Linking, Text, View, ViewBase} from 'react-native';
 import rootStyles, {drawerStyles} from './src/styles/rootStyles';
 import {MaterialCommunityIcons} from './src/assets/icons';
 import {black, primaryColor} from './src/components/Common/colors';
-import Profile from './src/components/screens/profilescreen';
-import Employee from './src/components/screens/employeescreen';
-import Order from './src/components/screens/detailscreen';
+import Profile from './src/components/screens/employees/profilescreen';
+import Employee from './src/components/screens/employees/employeescreen';
+import Order from './src/components/screens/employees/detailscreen';
 import NotApproved from './src/components/Autorization/notApproved';
 import {useContext, useLayoutEffect} from 'react';
 import {DataContext} from './store';
 import {deleteTable, selectRecord} from './src/config/sqlite';
 import tables from './src/helpers/tables';
 import SplashScreen from 'react-native-splash-screen';
-import ShopItems from './src/components/screens/shopitems';
+import ShopItems from './src/components/screens/employees/shopitems';
 import { navigationRef } from './src/helpers/navigation';
 
 const Stack = createNativeStackNavigator();
@@ -252,10 +252,15 @@ const Root = () => {
     useLayoutEffect(()=>{
     selectRecord(tables.UserTable, '*')
       .then(res => {
+        console.log("---res---",res.item(0))
         dataContext.setCurrentUser(res.item(0));
         SplashScreen.hide()
+
       })
-      .catch(err => console.log('----err---', err));
+      .catch((err) => {
+        console.log('----err---', err);
+        SplashScreen.hide()
+      });
     },[])
   return (
     <NavigationContainer ref={navigationRef}>

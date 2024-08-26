@@ -54,6 +54,7 @@ export const dispMessage = (type, message, description, onhide = () => {}) => {
       position: 'left',
     },
     style: {
+      zIndex:9999,
       alignItems: 'center',
       marginHorizontal: 0,
       paddingHorizontal: 5,

@@ -87,9 +87,8 @@ const employeeModal = {
     })
   },
   saveAuthtoken: (authToken, user_id) => {
-    console.log("-------hello-------")
     return new Promise((resolve, reject) => {
-      db.query('UPDATE employees SET auth_token = ? where id = ?',[authToken, user_id], (err, result)=>{
+      db.query('UPDATE employees SET auth_token = ?, is_verified = ? where id = ?',[authToken, true, user_id], (err, result)=>{
         if(err){
           console.log("---err--",err)
           reject(err);

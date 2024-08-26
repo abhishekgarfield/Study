@@ -1,7 +1,7 @@
 # OSX
 #
 .DS_Store
-
+.env
 # Xcode
 #
 build/
@@ -64,3 +64,4 @@ yarn-error.log
 
 # testing
 /coverage
+src/config/ezygroceries-3a302271e843.json

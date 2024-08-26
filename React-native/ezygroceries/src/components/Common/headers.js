@@ -6,16 +6,16 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  TextInput
+  TextInput,
 } from 'react-native';
 import {AntDesign, Ionicons, SimpleLineIcons} from '../../assets/icons';
 import {Title, smallTitles} from '../../assets/fonts';
 import {mainHeaderStyles} from '../../styles/mainHeaderStyles';
 import {TabRouter, useNavigation, useRoute} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
-import { black } from './colors';
+import {black} from './colors';
 
-const MainHeader = () => {
+const MainHeader = ({setItemModal, itemModal, addItem}) => {
   const headerAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const route = useRoute();
@@ -28,18 +28,18 @@ const MainHeader = () => {
   const searchAnimation = useRef(new Animated.Value(0)).current;
   const [searchData, setSearchData] = useState({
     is_active: false,
-    searcValue:'',
-  })
+    searcValue: '',
+  });
   const startSearchAnim = () => {
-    let toValue = searchData.is_active ? 0 : 45
-    Animated.timing(searchAnimation,{
-      useNativeDriver:false,
+    let toValue = searchData.is_active ? 0 : 45;
+    Animated.timing(searchAnimation, {
+      useNativeDriver: false,
       toValue: toValue,
-      easing:Easing.bounce
-    }).start(({finished})=>{
-       setSearchData({...searchData,is_active: !searchData.is_active})
-    })
-  }
+      easing: Easing.bounce,
+    }).start(({finished}) => {
+      setSearchData({...searchData, is_active: !searchData.is_active});
+    });
+  };
 
   const onFocus = () => {
     headerAnim.setValue(0);
@@ -55,8 +55,9 @@ const MainHeader = () => {
   }, []);
   return (
     <Animated.View
-      style={{paddingHorizontal: 17,
-        marginBottom:7,
+      style={{
+        paddingHorizontal: 17,
+        marginBottom: 7,
         transform: [
           {
             scale: headerAnim.interpolate({
@@ -82,12 +83,28 @@ const MainHeader = () => {
           </Text>
         </View>
         <View style={mainHeaderStyles.iconContainer}>
-          <View style={{paddingRight: 5}}>
-          <TouchableOpacity style={{ paddingRight: 5 }} onPress={()=>{
-            startSearchAnim();
-          }}>
-            <SimpleLineIcons name={ searchData.is_active ? 'magnifier-remove' : 'magnifier'} size={25} color={'black'}/>
+          {
+            addItem &&
+            <TouchableOpacity
+            style={{paddingRight: 10}}
+            onPress={() => {
+              setItemModal({...itemModal,['active']: !itemModal.active})
+            }}>
+            <AntDesign name={'addfile'} size={25} color={'black'} />
           </TouchableOpacity>
+          }
+          <View style={{paddingRight: 5}}>
+            <TouchableOpacity
+              style={{paddingRight: 5}}
+              onPress={() => {
+                startSearchAnim();
+              }}>
+              <SimpleLineIcons
+                name={searchData.is_active ? 'magnifier-remove' : 'magnifier'}
+                size={25}
+                color={'black'}
+              />
+            </TouchableOpacity>
           </View>
           <View>
             <Ionicons
@@ -99,28 +116,26 @@ const MainHeader = () => {
         </View>
       </View>
       <Animated.View
-        style={[mainHeaderStyles.searchBarTopContainer,{height: searchAnimation}]}>
+        style={[
+          mainHeaderStyles.searchBarTopContainer,
+          {height: searchAnimation},
+        ]}>
         <View style={mainHeaderStyles.searchbarInnerContainer}>
           <TextInput
-          value={searchData.searcValue}
-          onChangeText={(text)=>{
-            setSearchData({...searchData, searcValue: text});
-
-          }}
+            value={searchData.searcValue}
+            onChangeText={text => {
+              setSearchData({...searchData, searcValue: text});
+            }}
             placeholder="Search items"
             style={mainHeaderStyles.textInputStyles}
             placeholderTextColor={'grey'}
           />
-          <TouchableOpacity onPress={()=>{
-            setSearchData({...searchData, searcValue: ''});
-          }}>
-          <AntDesign
-            name={'closecircle'}
-            size={20}
-            color={'grey'}
-          />
+          <TouchableOpacity
+            onPress={() => {
+              setSearchData({...searchData, searcValue: ''});
+            }}>
+            <AntDesign name={'closecircle'} size={20} color={'grey'} />
           </TouchableOpacity>
-
         </View>
       </Animated.View>
     </Animated.View>

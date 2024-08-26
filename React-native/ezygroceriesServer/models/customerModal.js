@@ -12,7 +12,7 @@ const customerModal = {
       });
     });
   },
-  checkLogin: (email, password) => {
+  checkLogin: (email) => {
     return new Promise((resolve, reject) => {
       db.query(
         "SELECT * FROM customers WHERE email = ?",
@@ -51,6 +51,7 @@ const customerModal = {
           if(err){
             reject(err);
           }else{
+            console.log("---result----444",result)
             resolve(result);
           }
         }
@@ -87,7 +88,7 @@ const customerModal = {
   saveAuthtoken: (authToken, user_id) => {
     console.log("-------hello-------")
     return new Promise((resolve, reject) => {
-      db.query('UPDATE customers SET auth_token = ? where id = ?',[authToken, user_id], (err, result)=>{
+      db.query('UPDATE customers SET auth_token = ? , is_verified = ? where id = ?',[authToken, true,  user_id], (err, result)=>{
         if(err){
           console.log("---err--",err)
           reject(err);
