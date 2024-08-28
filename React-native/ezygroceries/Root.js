@@ -18,7 +18,6 @@ import {MaterialCommunityIcons} from './src/assets/icons';
 import {black, primaryColor} from './src/components/Common/colors';
 import Profile from './src/components/screens/employees/profilescreen';
 import Employee from './src/components/screens/employees/employeescreen';
-import Order from './src/components/screens/employees/detailscreen';
 import NotApproved from './src/components/Autorization/notApproved';
 import {useContext, useLayoutEffect} from 'react';
 import {DataContext} from './store';
@@ -27,6 +26,10 @@ import tables from './src/helpers/tables';
 import SplashScreen from 'react-native-splash-screen';
 import ShopItems from './src/components/screens/employees/shopitems';
 import { navigationRef } from './src/helpers/navigation';
+import MemberShip from './src/components/screens/employees/memberships/membership';
+import CustomerHome from './src/components/screens/customers/customerHome';
+import CusMemberShip from './src/components/screens/customers/customerMembership';
+
 
 const Stack = createNativeStackNavigator();
 const TabStack = createBottomTabNavigator();
@@ -145,7 +148,7 @@ const BottomTabStack = () => {
       },
     })}>
     <TabStack.Screen name="Home" component={Home} />
-    <TabStack.Screen name="Orders" component={Order} />
+    <TabStack.Screen name="Orders" component={MemberShip} />
     <TabStack.Screen name="Shopitems" component={ShopItems} />
     <TabStack.Screen name="Employees" component={Employee} />
     <TabStack.Screen name="Profile" component={Profile} />
@@ -191,8 +194,8 @@ const BottomTabStack = () => {
           );
         },
       })}>
-      <TabStack.Screen name="Home" component={Home} />
-      <TabStack.Screen name="Orders" component={Order} />
+      <TabStack.Screen name="CustomerHome" component={CustomerHome} />
+      <TabStack.Screen name="CustomerOrders" component={CusMemberShip} />
       <TabStack.Screen name="Shopitems" component={ShopItems} />
       <TabStack.Screen name="Employees" component={Employee} />
       <TabStack.Screen name="Profile" component={Profile} />

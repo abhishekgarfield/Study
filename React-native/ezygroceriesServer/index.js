@@ -20,7 +20,8 @@ app.use(loggerMiddleware);
 app.use(authMiddleware);
 
 // Built-in middleware for parsing JSON request bodies
-app.use(express.json());
+app.use(express.json({ limit: '50mb' })); // To handle large JSON payloads
+
 
 // Built-in middleware for parsing URL-encoded request bodies
 app.use(express.urlencoded({ extended: true }));

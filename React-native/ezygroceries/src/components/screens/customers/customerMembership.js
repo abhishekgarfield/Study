@@ -1,7 +1,7 @@
 import {SafeAreaView, Text, View} from 'react-native';
 import MainHeader from '../../Common/headers';
 
-const Order = () => {
+const CusMemberShip = () => {
   return (
     <SafeAreaView>
       <MainHeader />
@@ -9,4 +9,5 @@ const Order = () => {
   );
 };
 
-export default Order;
+export default CusMemberShip;
+

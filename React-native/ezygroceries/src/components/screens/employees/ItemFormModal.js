@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   Modal,
   View,
@@ -12,18 +12,25 @@ import {
   Alert,
 } from 'react-native';
 import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import ImageResizer from 'react-native-image-resizer';
 import {Ionicons, MaterialIcons} from '../../../assets/icons';
-import {black, fadedBlack} from '../../Common/colors';
+import {black, fadedBlack, white} from '../../Common/colors';
 import {
   Camera,
   useCameraDevice,
-  useCameraDevices,
   useCodeScanner,
 } from 'react-native-vision-camera';
 import axios from 'axios';
+import {createshopitem, updateshopitem} from '../../../apis/api';
+import {dispMessage} from '../../Common/flashMessages';
+import LoaderKit from 'react-native-loader-kit';
+import {DataContext} from '../../../../store';
+import { compressAndConvertToBase64 } from '../../../helpers/imageConvertor';
 
-const ItemFormModal = ({itemModal, setItemModal}) => {
+const ItemFormModal = ({itemModal, setItemModal, updateShopItems}) => {
+  const dataContext = useContext(DataContext);
+  console.log("------------",itemModal.item)
+  const {user_id, auth_token, shop_id} = dataContext.currentUser;
+  const [disable, setDisable] = useState(false);
   const [itemData, setItemData] = useState(
     itemModal.is_edit
       ? itemModal.item
@@ -65,12 +72,13 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
             },
           },
         )
-        .then(res => {
+        .then(async res => {
           console.log('Product Data:', res.data);
           if (res.data.error) {
             Alert.alert('Error', res.data.error);
           } else {
-            console.log("---res.data---",res.data)
+            let imageData = await compressAndConvertToBase64(res.data.stores[0].image)
+            console.log('---res.data---', res.data);
             if (res.data) {
               setItemData(prevData => ({
                 ...prevData,
@@ -78,10 +86,14 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
                 name: res.data.properties?.title[0],
                 description: res.data.properties?.description,
                 is_available: false,
-                price: res.data.stores.length > 0 ? res.data.stores[0]?.price?.price.toString() : '0',
+                price:
+                  res.data.stores.length > 0
+                    ? res.data.stores[0]?.price?.price.toString()
+                    : '0',
                 brand_name: res.data.properties?.brand,
                 quantity: res.data.properties?.weight + 'g',
-                image_urls: res.data.stores.length > 0 ? [res.data.stores[0].image] : [],
+                image_urls:
+                  res.data.stores.length > 0 ? [imageData] : [],
               }));
             }
           }
@@ -90,22 +102,6 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
       setScannerModalVisible(false); // Close the scanner modal
     }
   }, [barcodes]);
-
-  const compressImage = async uri => {
-    try {
-      const response = await ImageResizer.createResizedImage(
-        uri,
-        300,
-        300,
-        'JPEG',
-        70,
-      );
-      return response.uri;
-    } catch (err) {
-      console.error('Image compression error:', err);
-      return uri; // fallback to the original image in case of an error
-    }
-  };
 
   const pickImage = () => {
     launchImageLibrary({mediaType: 'photo'}, async response => {
@@ -121,8 +117,9 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
       } else if (response.assets) {
         try {
           const compressedUris = await Promise.all(
-            response.assets.map(async image => await compressImage(image.uri)),
+            response.assets.map(async image => await compressAndConvertToBase64(image.uri)),
           );
+          console.log("----compressed uris ---",compressedUris)
           setItemData(prevData => ({
             ...prevData,
             image_urls: [...prevData.image_urls, ...compressedUris],
@@ -152,7 +149,7 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
       } else if (response.assets) {
         try {
           const compressedUris = await Promise.all(
-            response.assets.map(async image => await compressImage(image.uri)),
+            response.assets.map(async image => await compressAndConvertToBase64(image.uri)),
           );
           setItemData(prevData => ({
             ...prevData,
@@ -174,9 +171,35 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
   };
 
   const handleFormSubmit = () => {
-    // Handle form submission logic
+    console.log('---------hello');
+    setDisable(true);
     console.log('Form Submitted', itemData);
-    setItemModal({...itemModal, active: false});
+    axios
+      .post(
+        itemModal.is_edit ? updateshopitem : createshopitem,
+        {
+          shop_item: {...itemData,shop_id},
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ezyGroceries_header_key: auth_token,
+          },
+        },
+      )
+      .then(res => {
+        setDisable(false);
+        console.log('----res-----', res.data);
+        updateShopItems(res.data.data)
+        setItemModal({...itemModal, active: false});
+        dispMessage('danger', 'Error', err.response.data);
+
+      })
+      .catch(err => {
+        setDisable(false);
+        setItemModal({...itemModal, active: false});
+        dispMessage('danger', 'Error', err.response.data);
+      });
   };
 
   const codeScanner = useCodeScanner(
@@ -314,21 +337,30 @@ const ItemFormModal = ({itemModal, setItemModal}) => {
               <ScrollView
                 horizontal={true}
                 style={styles.imagePreviewContainer}>
-                {itemData.image_urls.map((image, index) => (
+                {itemData.image_urls.map((image, index) =>
+                (
+
                   <Image
                     key={index}
-                    source={{uri: image.uri ? image.uri : image}}
+                    source={{uri: image.startsWith('http') ? image : `data:image/jpeg;base64,${image}`}}
                     style={styles.imagePreview}
                     resizeMode="cover"
                   />
                 ))}
               </ScrollView>
             ) : null}
-
             <TouchableOpacity
+              disabled={disable}
               style={styles.submitButton}
               onPress={handleFormSubmit}>
               <Text style={styles.submitButtonText}>Submit</Text>
+              {disable && (
+                <LoaderKit
+                  style={{width: 25, height: 25, marginLeft: 10}}
+                  name={'BallPulse'}
+                  color={white}
+                />
+              )}
             </TouchableOpacity>
           </ScrollView>
         </View>
@@ -444,6 +476,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   submitButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     backgroundColor: '#007bff',
     padding: 15,
     borderRadius: 5,

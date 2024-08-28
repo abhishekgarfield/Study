@@ -15,6 +15,11 @@ export const customerResendOtp = `${protocol}${domain}/customers/resendotp`;
 
 export const getShopItems = `${protocol}${domain}/shopitems/allshopItems`;
 export const updateItemAvailability = `${protocol}${domain}/shopitems/updateavailability`;
+export const createshopitem = `${protocol}${domain}/shopitems/createshopitem`;
+export const updateshopitem = `${protocol}${domain}/shopitems/editshopitem`;
+export const deleteshopitem = `${protocol}${domain}/shopitems/deleteshopitem`;
+
+
 // headers
 
 export let headers = {};

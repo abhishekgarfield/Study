@@ -5,16 +5,15 @@ import {
   View,
   Image,
   Switch,
-  Modal,
-  TextInput,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import MainHeader from '../../Common/headers';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import {useContext, useEffect, useRef, useState} from 'react';
+import {useCallback, useContext, useEffect, useRef, useState} from 'react';
 import {DataContext, contextInstance} from '../../../../store';
 import axios from 'axios';
-import {getShopItems, updateItemAvailability} from '../../../apis/api';
+import {deleteshopitem, getShopItems, updateItemAvailability} from '../../../apis/api';
 import {dispMessage} from '../../Common/flashMessages';
 import {fadedBlack, paleGreen, powderBlue, white} from '../../Common/colors';
 
@@ -24,16 +23,22 @@ import Animated2, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import {RectButton} from 'react-native-gesture-handler';
 import {MaterialCommunityIcons} from '../../../assets/icons';
 import {Title, text} from '../../../assets/fonts';
-import LoaderKit from 'react-native-loader-kit';
 import ItemSkeletonLoader from '../../Common/skeletonLoader';
 import ItemFormModal from './ItemFormModal';
 import ViewItemModal from './ViewItemModal';
 
-const LeftActions = ({progress, dragX, swipeRowRef, sendDataEdit}) => {
+const LeftActions = ({
+  progress,
+  dragX,
+  swipeRowRef,
+  sendDataEdit,
+  deleteItem,
+}) => {
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(progress.value, [0, 1], [0, 1], Extrapolation.CLAMP),
@@ -73,6 +78,7 @@ const LeftActions = ({progress, dragX, swipeRowRef, sendDataEdit}) => {
         }}
         onPress={() => {
           swipeRowRef.current.close();
+          deleteItem();
         }}>
         <MaterialCommunityIcons name={'delete'} size={22} color={white} />
         <Animated2.Text
@@ -89,18 +95,36 @@ const _renderLeftActions = (
   transalation,
   swipeRowRef,
   sendDataEdit,
+  deleteItem,
 ) => (
   <LeftActions
     dragX={transalation}
     progress={_progress}
     swipeRowRef={swipeRowRef}
     sendDataEdit={sendDataEdit}
+    deleteItem={deleteItem}
   />
 );
 
-const ShopItem = ({item, toggleSwitch, setItemModal, setModalVisibleData}) => {
+const ShopItem = ({
+  item,
+  toggleSwitch,
+  setItemModal,
+  setModalVisibleData,
+  deleteShopItem,
+}) => {
   const scale = useSharedValue(0.8);
   const [loading, setLoading] = useState(true);
+  const {
+    id,
+    image_urls,
+    brand_name,
+    description,
+    is_available,
+    name,
+    price,
+    quantity,
+  } = item.item;
   useEffect(() => {
     scale.value = withSpring(1, {damping: 2, stiffness: 100});
   }, []);
@@ -115,17 +139,14 @@ const ShopItem = ({item, toggleSwitch, setItemModal, setModalVisibleData}) => {
     setItemModal({active: true, is_edit: true, item: item.item});
   };
 
+  const deleteItem = () => {
+    scale.value = withTiming(0, { duration: 1000 }, () => {
+    });
+    deleteShopItem(id);
+  };
+
   const swipeRowRef = useRef(null);
-  const {
-    id,
-    image_urls,
-    brand_name,
-    description,
-    is_available,
-    name,
-    price,
-    quantity,
-  } = item.item;
+
   return (
     <Animated2.View
       style={[
@@ -150,10 +171,16 @@ const ShopItem = ({item, toggleSwitch, setItemModal, setModalVisibleData}) => {
         rightThreshold={200}
         dragOffsetFromRightEdge={40}
         renderLeftActions={(_, progress) => {
-          return _renderLeftActions(_, progress, swipeRowRef, sendDataEdit);
+          return _renderLeftActions(
+            _,
+            progress,
+            swipeRowRef,
+            sendDataEdit,
+            deleteItem,
+          );
         }}>
         <TouchableOpacity
-        activeOpacity={1}
+          activeOpacity={1}
           onPress={() => {
             console.log('----item.item', item.item);
             setModalVisibleData({
@@ -173,7 +200,7 @@ const ShopItem = ({item, toggleSwitch, setItemModal, setModalVisibleData}) => {
                   resizeMode="cover"
                   source={
                     !loading
-                      ? {uri: image_urls[0]}
+                      ? {uri: image_urls && image_urls[0]}
                       : require('../../../assets/images/Balll.gif')
                   }
                 />
@@ -235,6 +262,7 @@ const ShopItem = ({item, toggleSwitch, setItemModal, setModalVisibleData}) => {
                   alignItems: 'center',
                 }}>
                 <Switch
+                 style={ Platform.OS == 'ios' && {transform: [{scaleX: 0.65}, {scaleY: 0.65}]}}
                   trackColor={{false: '#767577', true: '#4CAF50'}}
                   thumbColor={is_available ? '#FFFFFF' : '#FFFFFF'}
                   onValueChange={value => {
@@ -277,6 +305,32 @@ const ShopItems = ({navigation}) => {
     item: {},
   });
 
+  const updateShopItems = useCallback(item => {
+    setShopItems(prev => [...prev, item]);
+  }, []);
+
+  const deleteShopItem = id => {
+    console.log('---id-----', id);
+    axios
+      .post(
+        deleteshopitem,
+        {
+          id: id,
+        },
+        {
+          headers: {
+            ezyGroceries_header_key: auth_token,
+          },
+        },
+      )
+      .then(res => {
+        setShopItems(prev => [...prev.filter(item => item.id != id)]);
+      })
+      .catch(err => {
+        dispMessage('danger', 'Error', err.response.data);
+      });
+  };
+
   const toggleSwitch = (id, value) => {
     axios
       .post(
@@ -317,9 +371,12 @@ const ShopItems = ({navigation}) => {
           ezyGroceries_header_key: auth_token,
         },
       })
-      .then(res => {
-        setLoading(false);
+      .then(async(res) => {
+
         setShopItems(res.data);
+        setTimeout(()=>{
+          setLoading(false);
+        },300)
       })
       .catch(err => {
         setLoading(false);
@@ -365,6 +422,7 @@ const ShopItems = ({navigation}) => {
                 toggleSwitch={toggleSwitch}
                 setItemModal={setItemModal}
                 setModalVisibleData={setModalVisibleData}
+                deleteShopItem={deleteShopItem}
               />
             );
           }}
@@ -373,7 +431,11 @@ const ShopItems = ({navigation}) => {
         />
       )}
       {itemModal.active && (
-        <ItemFormModal itemModal={itemModal} setItemModal={setItemModal} />
+        <ItemFormModal
+          itemModal={itemModal}
+          setItemModal={setItemModal}
+          updateShopItems={updateShopItems}
+        />
       )}
       {modalVisibleData.active && (
         <ViewItemModal
