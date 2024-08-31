@@ -390,6 +390,7 @@ const ShopItems = ({navigation}) => {
   const onFocus = () => {
     fetchShopItems();
   };
+
   useEffect(() => {
     const unsubscribeNavigation = navigation.addListener('focus', onFocus);
     return unsubscribeNavigation;

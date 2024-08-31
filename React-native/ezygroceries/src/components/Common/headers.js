@@ -15,7 +15,7 @@ import {TabRouter, useNavigation, useRoute} from '@react-navigation/native';
 import {useEffect, useRef, useState} from 'react';
 import {black} from './colors';
 
-const MainHeader = ({setItemModal, itemModal, addItem}) => {
+const MainHeader = ({setItemModal, itemModal, addItem, setAddMembershipModal, addMembershipModal }) => {
   const headerAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
   const route = useRoute();
@@ -83,6 +83,16 @@ const MainHeader = ({setItemModal, itemModal, addItem}) => {
           </Text>
         </View>
         <View style={mainHeaderStyles.iconContainer}>
+          {
+            route.name == 'Orders' &&
+            <TouchableOpacity
+            style={{paddingRight: 10}}
+            onPress={() => {
+              setAddMembershipModal(!addMembershipModal)
+            }}>
+            <AntDesign name={'adduser'} size={25} color={'black'} />
+          </TouchableOpacity>
+          }
           {
             addItem &&
             <TouchableOpacity

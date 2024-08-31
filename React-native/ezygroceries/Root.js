@@ -29,6 +29,8 @@ import { navigationRef } from './src/helpers/navigation';
 import MemberShip from './src/components/screens/employees/memberships/membership';
 import CustomerHome from './src/components/screens/customers/customerHome';
 import CusMemberShip from './src/components/screens/customers/customerMembership';
+import Shopscreen from './src/components/screens/customers/shopScreen';
+import Basketscreen from './src/components/screens/customers/basketScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -170,17 +172,17 @@ const BottomTabStack = () => {
         headerShown: false,
         tabBarIcon: ({focused, color, size}) => {
           let iconName = '';
-          if (route.name == 'Home') {
+          if (route.name == 'CustomerHome') {
             iconName = !focused
               ? 'home-thermometer-outline'
               : 'home-thermometer';
           } else if (route.name == 'Profile') {
             iconName = !focused ? 'account-edit-outline' : 'account-edit';
-          } else if (route.name == 'Orders') {
+          } else if (route.name == 'CustomerOrders') {
             iconName = !focused ? 'basket-check-outline' : 'basket-check';
           } else if (route.name == 'Employees') {
             iconName = !focused ? 'account-group-outline' : 'account-group';
-          } else if (route.name == 'Stat') {
+          } else if (route.name == 'Shopitems') {
             iconName = !focused ? 'chart-line' : 'chart-line-stacked';
           }
 
@@ -195,13 +197,25 @@ const BottomTabStack = () => {
         },
       })}>
       <TabStack.Screen name="CustomerHome" component={CustomerHome} />
-      <TabStack.Screen name="CustomerOrders" component={CusMemberShip} />
+      <TabStack.Screen name="CustomerOrders" component={CustmembersipStack} />
       <TabStack.Screen name="Shopitems" component={ShopItems} />
       <TabStack.Screen name="Employees" component={Employee} />
       <TabStack.Screen name="Profile" component={Profile} />
     </TabStack.Navigator>
   );
 };
+
+const CustmembersipStack = () => {
+  return(
+    <Stack.Navigator screenOptions={{
+      headerShown:false
+    }}>
+      <Stack.Screen name='allShopData' component={CusMemberShip}/>
+      <Stack.Screen name='shopScreen' component={Shopscreen}/>
+      <Stack.Screen name='basketScreen' component={Basketscreen} options={{presentation:'modal'}}/>
+    </Stack.Navigator>
+  )
+}
 
 const HomeStack = () => {
   return (

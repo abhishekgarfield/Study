@@ -7,6 +7,7 @@ import errorMiddleware from './middlewares/common/errorMiddleware.js';
 import { shopRoutes } from './routes/shopRoutes.js';
 import { customerRoutes } from './routes/customerRoutes.js';
 import { shopItemRoutes } from './routes/shopItemRoutes.js';
+import { membershipRoutes } from './routes/membershipRoutes.js';
 
 dotenv.config();
 const app = express();
@@ -31,6 +32,7 @@ app.use("/employees",employeeRoutes)
 app.use("/shops",shopRoutes)
 app.use("/customers",customerRoutes)
 app.use("/shopitems",shopItemRoutes)
+app.use("/memberships",membershipRoutes)
 
 // error handing middleware
 app.use(errorMiddleware)

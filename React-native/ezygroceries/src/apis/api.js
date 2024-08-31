@@ -19,6 +19,20 @@ export const createshopitem = `${protocol}${domain}/shopitems/createshopitem`;
 export const updateshopitem = `${protocol}${domain}/shopitems/editshopitem`;
 export const deleteshopitem = `${protocol}${domain}/shopitems/deleteshopitem`;
 
+// memberships
+
+export const getShopMembershipData = `${protocol}${domain}/memberships/shopmemberships`;
+export const addMembership = `${protocol}${domain}/memberships/addmembership`;
+export const getcustomerMembershipData = `${protocol}${domain}/memberships/customermemberships`;
+
+// shops
+
+export const getAvailableShops = `${protocol}${domain}/shops/getavailableshops`;
+
+
+
+
+
 
 // headers
 

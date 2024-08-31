@@ -33,6 +33,24 @@ const shopController = {
     } catch (err) {
       console.error("-----employeeController.getShop---", err);
     }
+  },
+  getAvailableShop: (req, res) => {
+    try {
+      console.log("---req.body---",req.query)
+
+      const{user_id} = req.query;
+      shopModal
+        .shopsAvailableForUser(user_id)
+        .then((result) => {
+          console.log("--res--", result);
+          res.status(200).send(result);
+        })
+        .catch((err) => {
+          res.status(400).send(err);
+        });
+    } catch (err) {
+      console.error("-----employeeController.getShop---", err);
+    }
   }
 };
 

@@ -99,7 +99,7 @@ const shopItemModal = {
         }
       );
     });
-  }
+  },
 };
 
 export default shopItemModal;
