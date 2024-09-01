@@ -5,7 +5,7 @@ import { DataContext } from "../../../../store";
 // import { useSelector } from "react-redux";
 // import { basketItemTotal } from "../fetures/basketSlice";
 
-const Basketicon = ({shopName}) => {
+const Basketicon = ({shop}) => {
   const dataContext = useContext(DataContext);
 
   const {items, setItems, total} = dataContext;
@@ -27,7 +27,7 @@ const Basketicon = ({shopName}) => {
           }}
           onPress={()=>{
             navigation.navigate("basketScreen",{
-              shopName
+              shop
             });
           }}
         >

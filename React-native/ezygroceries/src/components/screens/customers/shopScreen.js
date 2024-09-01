@@ -105,6 +105,18 @@ const Shopscreen = ({route}) => {
           >
             {shop.description}
           </Text>
+          <Text
+            style={{
+              fontSize: 15,
+              paddingHorizontal: 5,
+              paddingVertical: 1,
+              color: "grey",
+              marginLeft: 5,
+              marginBottom: 3,
+            }}
+          >
+            {shop.total_amount} /-
+          </Text>
         </View>
 
         <View style={{ backgroundColor: "lightgrey" }}>
@@ -123,14 +135,14 @@ const Shopscreen = ({route}) => {
 
     <ScrollView>
       {
-        !loader ? ( shop_items.length > 0 ? <Menucard dishes={shop_items} title={shop.name} /> : <Text style={{fontFamily:Title,textAlign:'center',paddingVertical:20,fontSize:20}}>No Items added</Text> ): (<><ItemSkeletonLoader/><ItemSkeletonLoader/><ItemSkeletonLoader/><ItemSkeletonLoader/></>)
+        !loader ? ( shop_items.length > 0 ? <Menucard dishes={shop_items} title={shop.name} is_subscribed={is_subscribed}/> : <Text style={{fontFamily:Title,textAlign:'center',paddingVertical:20,fontSize:20}}>No Items added</Text> ): (<><ItemSkeletonLoader/><ItemSkeletonLoader/><ItemSkeletonLoader/><ItemSkeletonLoader/></>)
       }
 
     </ScrollView>
 
     </ScrollView>
     <View>
-      <Basketicon shopName = {shop.name}/>
+      <Basketicon shop = {shop} />
     </View>
     </>
   );

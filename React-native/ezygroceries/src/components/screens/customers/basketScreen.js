@@ -12,11 +12,14 @@ import {
 import { XCircleIcon } from "react-native-heroicons/solid";
 import { DataContext } from "../../../../store";
 import { AntDesign, Entypo } from "../../../assets/icons";
+import RazorpayCheckout from 'react-native-razorpay';
+import { dispMessage } from "../../Common/flashMessages";
+
 
 const Basketscreen = ({route}) => {
   const navigation = useNavigation();
   const dataContext = useContext(DataContext);
-const {shopName} = route.params
+const {shop} = route.params
   const {items, setItems, total} = dataContext;
   const [groupedItems, setGroupedItems] = useState([]);
   const groupdItems = () => {
@@ -46,7 +49,7 @@ const {shopName} = route.params
       >
         <View style={{ flexGrow: 1, alignItems: "center", paddingVertical: 3 }}>
           <Text style={{ fontSize: 20, fontWeight: "bold" }}>Basket</Text>
-          <Text style={{ color: "grey" }}>{shopName}</Text>
+          <Text style={{ color: "grey" }}>{shop.name}</Text>
         </View>
         <TouchableWithoutFeedback
           onPress={() => {
@@ -123,7 +126,6 @@ const {shopName} = route.params
                 items.splice(index, 1)
                   setItems([...items]);
                 }
-                // dispatch(removeFromBasket(item[0]));
               }}
             >
               <Text
@@ -167,7 +169,12 @@ const {shopName} = route.params
             marginVertical: 12,
           }}
           onPress={() => {
-            navigation.navigate("prepairingorder");
+            if(shop.total_amount <total){
+              dispMessage('danger','Error',"You don't have enough credits.\nPlease recharge.")
+            }else{
+              axios.post()
+            }
+
           }}
         >
           <Text

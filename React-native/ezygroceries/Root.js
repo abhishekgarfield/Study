@@ -212,7 +212,7 @@ const CustmembersipStack = () => {
     }}>
       <Stack.Screen name='allShopData' component={CusMemberShip}/>
       <Stack.Screen name='shopScreen' component={Shopscreen}/>
-      <Stack.Screen name='basketScreen' component={Basketscreen} options={{presentation:'modal'}}/>
+      <Stack.Screen name='basketScreen' component={Basketscreen} options={{presentation:'card'}}/>
     </Stack.Navigator>
   )
 }

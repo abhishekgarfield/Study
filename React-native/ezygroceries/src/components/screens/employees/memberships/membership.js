@@ -11,24 +11,31 @@ import {
 import MainHeader from '../../../Common/headers';
 import {useContext, useEffect, useRef, useState} from 'react';
 import {AntDesign} from '../../../../assets/icons';
-import {black, fadedBlack, lightGreen, paleGreen, powderBlue, white} from '../../../Common/colors';
+import {
+  black,
+  fadedBlack,
+  lightGreen,
+  paleGreen,
+  powderBlue,
+  white,
+} from '../../../Common/colors';
 import {text, Title} from '../../../../assets/fonts';
 import {getShopMembershipData, headers} from '../../../../apis/api';
 import {DataContext} from '../../../../../store';
 import axios from 'axios';
 import ItemSkeletonLoader from '../../../Common/skeletonLoader';
-import Animated2, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated2, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import AddMembershipModal from './AddMembershipModal.js';
 
 const MembershipItems = ({item}) => {
-    console.log("----111----",item.item.item)
+  console.log('----111----', item.item.item);
   const scale = useSharedValue(0.8);
   const [loading, setLoading] = useState(true);
-  const {
-    first_name,
-    total_amount,
-    profile_pic
-  } = item.item;
+  const {first_name, total_amount, profile_pic} = item.item;
   useEffect(() => {
     scale.value = withSpring(1, {damping: 2, stiffness: 100});
   }, []);
@@ -38,8 +45,6 @@ const MembershipItems = ({item}) => {
       transform: [{scale: scale.value}],
     };
   });
-
-
 
   return (
     <Animated2.View
@@ -55,61 +60,61 @@ const MembershipItems = ({item}) => {
         },
         animatedStyle,
       ]}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            setModalVisibleData({
-              active: true,
-              item: item.item,
-            });
-          }}>
-          <View style={{display: 'flex'}}>
-            <View style={{flexDirection: 'row', padding: 10}}>
-              <View style={{flexBasis: '20%', marginRight: 10}}>
-                <Image
-                  onLoad={() => {
-                    setLoading(false);
-                  }}
-                  resizeMethod="resize"
-                  style={{height: '100%', width: '100%', borderRadius: 10}}
-                  resizeMode="cover"
-                  source={
-                    !loading
-                      ? {uri: profile_pic}
-                      : require('../../../../assets/images/Balll.gif')
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  flexWrap: 'wrap',
-                  overflow: 'hidden',
-                  flexDirection: 'column',
-                  flexBasis: '50%',
-                  flexGrow: 1,
-                }}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={() => {
+          setModalVisibleData({
+            active: true,
+            item: item.item,
+          });
+        }}>
+        <View style={{display: 'flex'}}>
+          <View style={{flexDirection: 'row', padding: 10}}>
+            <View style={{flexBasis: '20%', marginRight: 10}}>
+              <Image
+                onLoad={() => {
+                  setLoading(false);
+                }}
+                resizeMethod="resize"
+                style={{height: '100%', width: '100%', borderRadius: 10}}
+                resizeMode="cover"
+                source={
+                  !loading
+                    ? {uri: profile_pic}
+                    : require('../../../../assets/images/Balll.gif')
+                }
+              />
+            </View>
+            <View
+              style={{
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                overflow: 'hidden',
+                flexDirection: 'column',
+                flexBasis: '50%',
+                flexGrow: 1,
+              }}>
+              <Text
+                style={{fontFamily: Title, width: '100%', fontWeight: '500'}}
+                ellipsizeMode="tail"
+                numberOfLines={1}>
+                {first_name}
+              </Text>
+              <View style={{flexDirection: 'row'}}>
                 <Text
-                  style={{fontFamily: Title, width: '100%', fontWeight: '500'}}
-                  ellipsizeMode="tail"
-                  numberOfLines={1}>
-                  {first_name}
+                  style={{
+                    fontFamily: text,
+                    fontSize: 12,
+                    fontWeight: '400',
+                    color: fadedBlack,
+                  }}>
+                  {total_amount} /-
                 </Text>
-                <View style={{flexDirection: 'row'}}>
-                  <Text
-                    style={{
-                      fontFamily: text,
-                      fontSize: 12,
-                      fontWeight: '400',
-                      color: fadedBlack,
-                    }}>
-                    {total_amount} /-
-                  </Text>
-                </View>
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
     </Animated2.View>
   );
 };
@@ -117,7 +122,7 @@ const MembershipItems = ({item}) => {
 const MemberShip = ({navigation}) => {
   const dataContext = useContext(DataContext);
   const [membershipLoader, setmembershipLoader] = useState(true);
-  console.log("-------------------1111---------",dataContext.currentUser)
+  console.log('-------------------1111---------', dataContext.currentUser);
   const {user_id, shop_id, auth_token} = dataContext.currentUser;
   const [collapsed, setCollapsed] = useState(false);
   const [addMembershipModal, setAddMembershipModal] = useState(false);
@@ -163,7 +168,7 @@ const MemberShip = ({navigation}) => {
   };
 
   const fetchMmbershipData = () => {
-    setmembershipLoader(true)
+    setmembershipLoader(true);
     axios
       .get(`${getShopMembershipData}?shop_id=${shop_id}`, {
         headers: {
@@ -172,13 +177,13 @@ const MemberShip = ({navigation}) => {
       })
       .then(res => {
         setMembershipData(res.data);
-        setmembershipLoader(false)
+        setmembershipLoader(false);
       })
       .catch(err => {
         if (err.response.status == 401) {
           dispMessage(err.response.data);
         }
-        setmembershipLoader(false)
+        setmembershipLoader(false);
         console.log('----errr---', err.response.data);
       });
   };
@@ -206,12 +211,11 @@ const MemberShip = ({navigation}) => {
     // fetchOrdersData();
   };
 
-
-  const handleMembershipSave = (new_membership) => {
-    console.log("----------new membership ------",new_membership)
-    setMembershipData([...membershipData,new_membership]);
-    setAddMembershipModal(!addMembershipModal)
-  }
+  const handleMembershipSave = new_membership => {
+    console.log('----------new membership ------', new_membership);
+    setMembershipData([...membershipData, new_membership]);
+    setAddMembershipModal(!addMembershipModal);
+  };
 
   useEffect(() => {
     const unsubscribeNavigation = navigation.addListener('focus', onFocus);
@@ -219,7 +223,10 @@ const MemberShip = ({navigation}) => {
   }, []);
   return (
     <SafeAreaView style={{display: 'flex', flex: 1}}>
-      <MainHeader  setAddMembershipModal={setAddMembershipModal} addMembershipModal={addMembershipModal}/>
+      <MainHeader
+        setAddMembershipModal={setAddMembershipModal}
+        addMembershipModal={addMembershipModal}
+      />
       <View style={{flex: 1, flexDirection: 'column', paddingHorizontal: 17}}>
         <TouchableOpacity
           activeOpacity={1}
@@ -268,15 +275,11 @@ const MemberShip = ({navigation}) => {
                 <FlatList
                   style={{marginVertical: 3}}
                   contentContainerStyle={{
-                    paddingHorizontal:5,
-                    paddingVertical:5
+                    paddingHorizontal: 5,
+                    paddingVertical: 5,
                   }}
                   renderItem={item => {
-                    return (
-                      <MembershipItems
-                        item={item}
-                      />
-                    );
+                    return <MembershipItems item={item} />;
                   }}
                   keyExtractor={item => item.id}
                   data={membershipData}
@@ -328,10 +331,13 @@ const MemberShip = ({navigation}) => {
           {!collapsed2 && <Text>Content for section 2</Text>}
         </Animated.View>
       </View>
-      {
-        addMembershipModal &&
-        <AddMembershipModal addMembershipModal={addMembershipModal} setAddMembershipModal={setAddMembershipModal} handleMembershipSave={handleMembershipSave}/>
-      }
+      {addMembershipModal && (
+        <AddMembershipModal
+          addMembershipModal={addMembershipModal}
+          setAddMembershipModal={setAddMembershipModal}
+          handleMembershipSave={handleMembershipSave}
+        />
+      )}
     </SafeAreaView>
   );
 };

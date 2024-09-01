@@ -4,19 +4,15 @@ import {
   View,
   Image,
   TouchableOpacity,
-  TextInput,
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
 import {AntDesign} from '../../../assets/icons';
 import {white} from '../../Common/colors';
 import {DataContext} from '../../../../store';
-// import { MinusIcon, PlusIcon } from "react-native-heroicons/solid";
-// import { useDispatch, useSelector } from "react-redux";
-// import { addtoBasket, removeFromBasket } from "../fetures/basketSlice";
-// import { setRestaurant } from "../fetures/restaurantSlice";
+import { dispMessage } from '../../Common/flashMessages';
 
-const Dishcard = ({dish, title}) => {
+const Dishcard = ({dish, title, is_subscribed}) => {
   const [isPressed, setIspressed] = useState(false);
   const dataContext = useContext(DataContext);
 
@@ -38,7 +34,9 @@ const Dishcard = ({dish, title}) => {
   return (
     <TouchableWithoutFeedback
       onPress={e => {
-        setIspressed(!isPressed);
+        is_subscribed ?
+        setIspressed(!isPressed):
+        dispMessage('danger','Error',"You don't have membership for this shop")
       }}>
       <View style={isPressed ? styles.nobrdr : styles.brdr}>
         <View style={{width: 2, flexGrow: 1}}>
